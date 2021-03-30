@@ -2,7 +2,7 @@
 % Please edit documentation in R/player-ids.R
 \name{get_player_ids}
 \alias{get_player_ids}
-\title{Computes a tidy correlation}
+\title{Download and processes MLB player IDs}
 \usage{
 get_player_ids()
 }
@@ -10,5 +10,5 @@ get_player_ids()
 A data table with MLBAM, First Name, and Last Name
 }
 \description{
-Computes a tidy correlation
+Download and processes MLB player IDs
 }
