@@ -1,11 +1,8 @@
 # these are functions that don't yet have a home or are holdovers from a previous refactor
 # these are generally more developed that functions in scratch which are being developed from scratch
-get_matchup_hands = function(.bip, .batter, .pitcher) {
+get_matchup_hands = function(bip, b_id, p_id) {
 
-  matchup_bip = .bip %>%
-    dplyr::filter(.data$batter == .batter) %>%
-    dplyr::filter(.data$pitcher == .pitcher)
-
+  matchup_bip = bip[batter == b_id & pitcher == p_id]
   b_stands = unique(matchup_bip$stand)
   p_throws = unique(matchup_bip$p_throws)
 
@@ -36,3 +33,7 @@ get_pitcher_pitches = function(.bip, .pitcher) {
     dplyr::summarise(n = dplyr::n()) %>%
     dplyr::mutate(freq = .data$n / sum(.data$n))
 }
+
+
+
+
