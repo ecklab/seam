@@ -2,7 +2,7 @@
 # these are generally more developed that functions in scratch which are being developed from scratch
 get_matchup_hands = function(bip, b_id, p_id) {
 
-  matchup_bip = bip[batter == b_id & pitcher == p_id]
+  matchup_bip = bip[bip$batter == b_id & bip$pitcher == p_id, ]
   b_stands = unique(matchup_bip$stand)
   p_throws = unique(matchup_bip$p_throws)
 
@@ -31,9 +31,5 @@ get_pitcher_pitches = function(.bip, .pitcher) {
     dplyr::filter(.data$pitcher == .pitcher) %>%
     dplyr::group_by(.data$pitch_type) %>%
     dplyr::summarise(n = dplyr::n()) %>%
-    dplyr::mutate(freq = .data$n / sum(.data$n))
+    dplyr::mutate(freq = .data$n / sum(.data$n)) # this needs to be based on pitches instead
 }
-
-
-
-
