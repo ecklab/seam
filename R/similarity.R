@@ -17,6 +17,7 @@ calc_sim_batter = function(b_study_char, b_pool_char, ratio = 0.85) {
     dplyr::select(dplyr::all_of(char)) %>%
     as.matrix()
 
+  # TODO: specify v correctly
   v_dim = length(char_study)
   v = diag(1, v_dim, v_dim)
 
