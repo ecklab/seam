@@ -1,10 +1,26 @@
+pitches_processed %>%
+  dplyr::filter(lubridate::year(game_date) >= 2017) %>%
+  dplyr::filter(lubridate::year(game_date) <= 2019) %>%
+  dplyr::filter(game_type == "R") %>%
+  dplyr::filter(!is.na(events)) %>%
+  dplyr::filter(events != "") #!!!!! THIS IS IMPORTANT, COULD BE EFFECTING DATA IN USE
+
 ################################################################################
 
-asdf = pitches_processed %>%
+pitches_processed_sub = pitches_processed %>%
   dplyr::select("events", "pitcher", "pitch_type")
 
-freq = asdf %>%
-  dplyr::filter(events != "null") %>%
+
+pitches_processed_sub %>%
+  dplyr::filter(.data$pitch_type != "") %>%
+  dplyr::filter(.data$pitch_type != "KN") %>%
+  dplyr::filter(.data$pitch_type != "EP") %>%
+  dplyr::filter(.data$pitch_type != "SC") %>%
+  dplyr::filter(.data$pitch_type != "IN") %>%
+  dplyr::filter(.data$pitch_type != "PO") %>%
+  dplyr::mutate(pitch_type = forcats::fct_recode(.data$pitch_type, "CU" = "KC")) %>%
+  dplyr::mutate(pitch_type = forcats::fct_recode(.data$pitch_type, "FF" = "FA")) %>%
+  dplyr::mutate(pitch_type = forcats::fct_recode(.data$pitch_type, "FS" = "FO")) %>%
   dplyr::filter(pitcher == lu_p(p_lu, "Justin Verlander")) %>%
   dplyr::group_by(.data$pitch_type) %>%
   dplyr::summarise(n = dplyr::n()) %>%
