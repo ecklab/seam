@@ -19,3 +19,10 @@ You can install the development version from
 # install.packages("devtools")
 devtools::install_github("ecklab/seampkg")
 ```
+
+## TODO
+
+-   Look into pitches of type `""`
+-   Split pools into overall vs year.
+-   Consider removing “n” from some calculations.
+-   In general, consider quantiles of various “characteristics”
