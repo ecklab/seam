@@ -83,3 +83,16 @@ make_bip_pool_pitch = function(.pitch_type, .batter, .pitcher, .bip, .batter_poo
     dplyr::select(x, y, similarity, weight)
 
 }
+
+# stuff
+release_speed # velocity
+release_spin_rate # spin rate
+pfx_x # horizontal break
+pfx_z # vertical break
+
+# not stuff
+release_pos_x
+release_pos_y
+release_pos_z
+pitch_launch_h_c # horizontal launch angle, need to calculate
+pitch_launch_v_c # vertical launch angle, need to calculate
