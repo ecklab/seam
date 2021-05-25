@@ -62,3 +62,16 @@ pick_bandwidth = function(x) {
   h = diff(stats::quantile(x, c(0.25, 0.75))) / 1.34
   4.24 * min(stats::sd(x), h) * length(x) ^ (-1 / 5)
 }
+
+kde_to_df = function(kde) {
+
+  df = expand.grid(
+    x = kde$x,
+    y = kde$y
+  )
+
+  df$z = as.numeric(kde$z)
+
+  return(df)
+
+}
