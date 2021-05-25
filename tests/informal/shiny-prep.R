@@ -6,6 +6,10 @@ p_lu = data.table::fread("data/p_lu.csv")
 
 # this should happen outside of the seam app
 batter_pool = get_batter_pool(bip = bip)
+# TODO: pitcher pool
+# TODO: write to disk
+
+# this happens inside of the seam app
 trout_verlander_bip = make_bip_pool_pitch(.pitch_type = "FF",
                     .batter = lu_b(b_lu, "Mike Trout"),
                     .pitcher = lu_p(p_lu, "Justin Verlander"),
@@ -13,7 +17,9 @@ trout_verlander_bip = make_bip_pool_pitch(.pitch_type = "FF",
                     .batter_pool = batter_pool,
                     .stand = "R",
                     .p_throws = "R")
-trout_verlander_estimated = kde(x = trout_verlander_bip$x, y = trout_verlander_bip$y, w = trout_verlander_bip$weight)
+trout_verlander_estimated = kde(x = trout_verlander_bip$x,
+                                y = trout_verlander_bip$y,
+                                w = trout_verlander_bip$weight)
 kde_to_df(trout_verlander_estimated)
 
 # load {seam} package
@@ -33,7 +39,3 @@ get_matchup_hands(
   b_id = lu_b(b_lu, "Mike Trout"),
   p_id = lu_p(p_lu, "Justin Verlander")
 )
-
-
-
-
