@@ -3,8 +3,9 @@
 ^LICENSE\.md$
 ^README\.Rmd$
 ^\.github$
-interactive-testing.R
 ^data/pitches-processed\.csv$
 ^data/b_lu\.csv$
 ^data/p_lu\.csv$
 ^data/bip\.csv$
+^tests/informal/scratch\.R$
+^tests/informal/shiny-prep\.R$
