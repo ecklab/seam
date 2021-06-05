@@ -24,6 +24,8 @@ get_matchup_hands = function(bip, b_id, p_id) {
 
 }
 
+# TODO: for some reason this is current hard-coded as verlander
+# TODO: pre-calculate this information for all pitchers, query within seam
 get_pitcher_pitches = function(.bip, .pitches, .pitcher) {
 
   pitch_ratio = .pitches %>%

@@ -1,3 +1,12 @@
+verlander = pitches_processed %>%
+  dplyr::filter(pitcher == lu_p(p_lu, "Aroldis Chapman")) %>%
+  dplyr::filter(game_year == 2016)
+
+ggplot(data = verlander, mapping = aes(x = release_speed, y = release_spin_rate, col = pitch_type)) +
+  geom_point()
+
+################################################################################
+
 pitches_processed %>%
   dplyr::filter(lubridate::year(game_date) >= 2017) %>%
   dplyr::filter(lubridate::year(game_date) <= 2019) %>%
