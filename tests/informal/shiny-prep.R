@@ -3,20 +3,26 @@ pitches_processed = data.table::fread("data/pitches-processed.csv")
 bip = data.table::fread("data/bip.csv")
 b_lu = data.table::fread("data/b_lu.csv")
 p_lu = data.table::fread("data/p_lu.csv")
+unique(pitches_processed$game_year) # verify correct years
+
+# load seam package
+devtools::load_all()
 
 # this should happen outside of the seam app
 batter_pool = get_batter_pool(bip = bip)
+pitcher_pool = get_pitcher_pool(bip = bip)
 # TODO: pitcher pool
-# TODO: write to disk
+# TODO: write to disk, move to statcast-utils
 
 # this happens inside of the seam app
-trout_verlander_bip = make_bip_pool_pitch(.pitch_type = "FF",
-                    .batter = lu_b(b_lu, "Mike Trout"),
-                    .pitcher = lu_p(p_lu, "Justin Verlander"),
-                    .bip = bip,
-                    .batter_pool = batter_pool,
-                    .stand = "R",
-                    .p_throws = "R")
+trout_verlander_bip = make_bip_pool_synth_batter(
+  .pitch_type = "FF",
+  .batter = lu_b(b_lu, "Mike Trout"),
+  .pitcher = lu_p(p_lu, "Justin Verlander"),
+  .bip = bip,
+  .batter_pool = batter_pool,
+  .stand = "R",
+  .p_throws = "R")
 trout_verlander_estimated = kde(x = trout_verlander_bip$x,
                                 y = trout_verlander_bip$y,
                                 w = trout_verlander_bip$weight)
@@ -39,3 +45,17 @@ get_matchup_hands(
   b_id = lu_b(b_lu, "Mike Trout"),
   p_id = lu_p(p_lu, "Justin Verlander")
 )
+
+
+
+################################################################################
+
+
+a = make_bip_pool_synth_pitcher(
+  .pitch_type = "FF",
+  .batter = lu_b(b_lu, "Mike Trout"),
+  .pitcher = lu_p(p_lu, "Justin Verlander"),
+  .bip = bip,
+  .pitcher_pool = pitcher_pool,
+  .stand = "R",
+  .p_throws = "R")
