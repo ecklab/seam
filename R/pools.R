@@ -17,6 +17,8 @@ get_batter_pool = function(bip) {
 
   # batter pool "overall"
   batter_pool_all = bip %>%
+    dplyr::filter(game_year >= 2018) %>%
+    dplyr::filter(game_year <= 2020) %>%
     dplyr::group_by(batter, pitch_type, stand) %>%
     dplyr::summarise(lf_prc = mean(spray_angle < -15),
                      cf_prc = mean(spray_angle >= -15 & spray_angle <= 15),
@@ -42,7 +44,7 @@ get_batter_pool = function(bip) {
 }
 
 # this will be done in the seam app
-make_bip_pool_pitch = function(.pitch_type, .batter, .pitcher, .bip, .batter_pool, .stand, .p_throws) {
+make_bip_pool_synth_batter = function(.pitch_type, .batter, .pitcher, .bip, .batter_pool, .stand, .p_throws) {
 
   # relevant balls in play
   p_bip = .bip %>%
@@ -83,6 +85,99 @@ make_bip_pool_pitch = function(.pitch_type, .batter, .pitcher, .bip, .batter_poo
     dplyr::select(x, y, similarity, weight)
 
 }
+
+# this should happen before the seam app
+get_pitcher_pool = function(bip) {
+
+  # pitcher pool by "year"
+  pitcher_pool_year = bip %>%
+    dplyr::group_by(pitcher, pitch_type, game_year, p_throws) %>%
+    dplyr::summarise(release_speed = mean(release_speed),
+                     release_spin_rate = mean(release_spin_rate),
+                     pfx_x = mean(pfx_x),
+                     pfx_z = mean(pfx_z),
+                     release_pos_x = mean(release_pos_x),
+                     release_pos_y = mean(release_pos_y),
+                     release_pos_z = mean(release_pos_z),
+                     n = dplyr::n())
+
+  # pitcher pool "overall"
+  pitcher_pool_all = bip %>%
+    dplyr::filter(game_year >= 2018) %>%
+    dplyr::filter(game_year <= 2020) %>%
+    dplyr::group_by(pitcher, pitch_type, p_throws) %>%
+    dplyr::summarise(release_speed = mean(release_speed),
+                     release_spin_rate = mean(release_spin_rate),
+                     pfx_x = mean(pfx_x),
+                     pfx_z = mean(pfx_z),
+                     release_pos_x = mean(release_pos_x),
+                     release_pos_y = mean(release_pos_y),
+                     release_pos_z = mean(release_pos_z),
+                     n = dplyr::n())
+  pitcher_pool_all$game_year = 0
+
+  # merge year and overall, ungroup
+  pitcher_pool = dplyr::ungroup(dplyr::bind_rows(pitcher_pool_year, pitcher_pool_all))
+
+  # scale characteristic variables
+  pitcher_pool %>%
+    dplyr::mutate(
+      release_speed = scale_this(release_speed),
+      release_spin_rate = scale_this(release_spin_rate),
+      pfx_x = scale_this(pfx_x),
+      pfx_z = scale_this(pfx_z),
+      release_pos_x = scale_this(release_pos_x),
+      release_pos_y = scale_this(release_pos_y),
+      release_pos_z = scale_this(release_pos_z)
+    )
+
+}
+
+# this will be done in the seam app
+make_bip_pool_synth_pitcher = function(.pitch_type, .batter, .pitcher, .bip, .pitcher_pool, .stand, .p_throws) {
+
+  # relevant balls in play
+  b_bip = .bip %>%
+    dplyr::filter(batter == .batter) %>%
+    dplyr::filter(pitcher != .pitcher) %>%
+    dplyr::filter(p_throws == .p_throws) %>%
+    dplyr::filter(stand == .stand) %>%
+    dplyr::filter(pitch_type == .pitch_type) %>%
+    dplyr::select(game_year, pitcher, x, y)
+
+  # characteristics of batter under study
+  ## TODO: consider overall vs current year
+  p_study_char = .pitcher_pool %>%
+    dplyr::filter(pitcher == .pitcher) %>%
+    dplyr::filter(p_throws == .p_throws) %>%
+    dplyr::filter(pitch_type == .pitch_type) %>%
+    dplyr::filter(game_year == 0)
+
+  # potential donor pitchers
+  p_pool_char = .pitcher_pool %>%
+    dplyr::filter(pitch_type == .pitch_type) %>%
+    dplyr::filter(p_throws == .p_throws) %>%
+    dplyr::filter(game_year != 0) %>%
+    dplyr::filter(pitcher != .pitcher) %>%
+    dplyr::filter(pitcher %in% unique(p_bip$pitcher)) # THIS MIGHT BE "CORRECT" BUT EFFECT OTHER CALCULATIONS!!!!
+
+  list(p_bip, p_pool_char)
+
+  # # calculate similarity for all potential donors
+  # # and weights?
+  # p_pool_sims = calc_sim_pitcher(p_study_char = p_study_char,
+  #                               p_pool_char = p_pool_char,
+  #                               ratio = 0.85)
+  #
+  # # append similarities to pool
+  # p_pool = dplyr::bind_cols(p_pool_char, p_pool_sims)
+  #
+  # # append
+  # dplyr::left_join(b_bip, p_pool, by = c("pitcher", "game_year")) %>%
+  #   dplyr::select(x, y, similarity, weight)
+
+}
+
 
 # # stuff
 # release_speed # velocity
