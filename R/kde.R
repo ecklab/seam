@@ -2,7 +2,8 @@
 # https://stat.ethz.ch/pipermail/r-help/2006-June/107405.html
 # MASS::kde2d
 # ggtern::kde2d.weighted
-kde = function(x, y = NULL, h = NULL, w = NULL, n = 25, lims = c(range(x), range(y)), ...) {
+# TODO: consider making default limits to be: lims = c(-150, 150, -10, 200))
+kde = function(x, y = NULL, h = NULL, w = NULL, n = 100, lims = c(range(x), range(y)), ...) {
 
   if (is.null(y)) {
     return(stats::density(x, ...))
