@@ -71,16 +71,15 @@ make_bip_pool_synth_batter = function(.pitch_type, .batter, .pitcher, .bip, .bat
     dplyr::filter(batter != .batter) %>%
     dplyr::filter(batter %in% unique(p_bip$batter)) # THIS MIGHT BE "CORRECT" BUT EFFECT OTHER CALCULATIONS!!!!
 
-  # calculate similarity for all potential donors
-  # and weights?
+  # calculate similarity and weights for all potential donors
   b_pool_sims = calc_sim_batter(b_study_char = b_study_char,
                                 b_pool_char = b_pool_char,
                                 ratio = 0.85)
 
-  # append similarities to pool
+  # append sims and weights to pool
   b_pool = dplyr::bind_cols(b_pool_char, b_pool_sims)
 
-  # append
+  # append sims and weights to bip, select relevant variables
   dplyr::left_join(p_bip, b_pool, by = c("batter", "game_year")) %>%
     dplyr::select(x, y, similarity, weight)
 
@@ -159,35 +158,21 @@ make_bip_pool_synth_pitcher = function(.pitch_type, .batter, .pitcher, .bip, .pi
     dplyr::filter(p_throws == .p_throws) %>%
     dplyr::filter(game_year != 0) %>%
     dplyr::filter(pitcher != .pitcher) %>%
-    dplyr::filter(pitcher %in% unique(p_bip$pitcher)) # THIS MIGHT BE "CORRECT" BUT EFFECT OTHER CALCULATIONS!!!!
+    dplyr::filter(pitcher %in% unique(b_bip$pitcher)) # THIS MIGHT BE "CORRECT" BUT EFFECT OTHER CALCULATIONS!!!!
 
-  list(p_bip, p_pool_char)
+  # # temp debugging
+  # list(p_bip, p_pool_char)
 
-  # # calculate similarity for all potential donors
-  # # and weights?
-  # p_pool_sims = calc_sim_pitcher(p_study_char = p_study_char,
-  #                               p_pool_char = p_pool_char,
-  #                               ratio = 0.85)
-  #
-  # # append similarities to pool
-  # p_pool = dplyr::bind_cols(p_pool_char, p_pool_sims)
-  #
-  # # append
-  # dplyr::left_join(b_bip, p_pool, by = c("pitcher", "game_year")) %>%
-  #   dplyr::select(x, y, similarity, weight)
+  # calculate similarity and weights for all potential donors
+  p_pool_sims = calc_sim_pitcher(p_study_char = p_study_char,
+                                p_pool_char = p_pool_char,
+                                ratio = 0.85)
+
+  # append sims and weights to pool
+  p_pool = dplyr::bind_cols(p_pool_char, p_pool_sims)
+
+  # append sims and weights to bip, select relevant variables
+  dplyr::left_join(b_bip, p_pool, by = c("pitcher", "game_year")) %>%
+    dplyr::select(x, y, similarity, weight)
 
 }
-
-
-# # stuff
-# release_speed # velocity
-# release_spin_rate # spin rate
-# pfx_x # horizontal break
-# pfx_z # vertical break
-#
-# # not stuff
-# release_pos_x
-# release_pos_y
-# release_pos_z
-# pitch_launch_h_c # horizontal launch angle, need to calculate
-# pitch_launch_v_c # vertical launch angle, need to calculate
