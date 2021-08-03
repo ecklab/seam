@@ -31,7 +31,7 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
   # synth batter ###############################################################
 
   synth_batter_pools = lapply(
-    v$pitch_type,
+    pitcher_pitches$pitch_type,
     make_bip_pool_synth_batter,
     .batter = .batter,
     .pitcher = .pitcher,
@@ -54,7 +54,7 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
   # synth pitcher ##############################################################
 
   synth_pitcher_pools = lapply(
-    v$pitch_type,
+    pitcher_pitches$pitch_type,
     make_bip_pool_synth_pitcher,
     .batter = .batter,
     .pitcher = .pitcher,
