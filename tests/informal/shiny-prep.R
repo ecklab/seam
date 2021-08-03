@@ -29,20 +29,7 @@ get_matchup_hands(
   p_id = lu_p(p_lu, "Justin Verlander")
 )
 
-# this happens inside of the seam app
-ff_synth_trout_verlander_bip = make_bip_pool_synth_batter(
-  .pitch_type = "FF",
-  .batter = lu_b(b_lu, "Mike Trout"),
-  .pitcher = lu_p(p_lu, "Justin Verlander"),
-  .bip = bip,
-  .batter_pool = batter_pool,
-  .stand = "R",
-  .p_throws = "R")
-ff_synth_trout_verlander_estimated = kde(x = ff_synth_trout_verlander_bip$x,
-                                         y = ff_synth_trout_verlander_bip$y,
-                                         w = ff_synth_trout_verlander_bip$weight)
-kde_to_df(ff_synth_trout_verlander_estimated)
-
+# test a matchup
 do_full_seam_matchup(
   .batter = lu_b(b_lu, "Mike Trout"),
   .pitcher = lu_p(p_lu, "Justin Verlander"),
