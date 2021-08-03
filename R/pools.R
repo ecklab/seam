@@ -176,3 +176,11 @@ make_bip_pool_synth_pitcher = function(.pitch_type, .batter, .pitcher, .bip, .pi
     dplyr::select(x, y, similarity, weight)
 
 }
+
+# this will be done in the seam app
+# TODO: should this be done by pitch type? (very unlikely there is enough data)
+make_empirical_pool = function(.batter, .pitcher, .bip) {
+  .bip %>%
+    dplyr::filter(batter == .batter) %>%
+    dplyr::filter(pitcher == .pitcher)
+}
