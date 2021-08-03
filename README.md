@@ -19,3 +19,12 @@ You can install the development version from
 # install.packages("devtools")
 devtools::install_github("ecklab/seampkg")
 ```
+
+## TODO
+
+-   Look into pitches of type `""`
+-   Split pools into overall vs year.
+-   Consider removing “n” from some calculations.
+-   In general, consider quantiles of various “characteristics”
+-   <https://baseballwithr.wordpress.com/2018/01/15/chance-of-hit-as-function-of-launch-angle-exit-velocity-and-spray-angle/>
+-   <https://github.com/bdilday/GeomMLBStadiums>

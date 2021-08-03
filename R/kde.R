@@ -2,7 +2,8 @@
 # https://stat.ethz.ch/pipermail/r-help/2006-June/107405.html
 # MASS::kde2d
 # ggtern::kde2d.weighted
-kde = function(x, y = NULL, h = NULL, w = NULL, n = 25, lims = c(range(x), range(y)), ...) {
+# TODO: consider making default limits to be: lims = c(-150, 150, -10, 200))
+kde = function(x, y = NULL, h = NULL, w = NULL, n = 100, lims = c(-150, 150, -10, 200), ...) {
 
   if (is.null(y)) {
     return(stats::density(x, ...))
@@ -61,4 +62,25 @@ kde = function(x, y = NULL, h = NULL, w = NULL, n = 25, lims = c(range(x), range
 pick_bandwidth = function(x) {
   h = diff(stats::quantile(x, c(0.25, 0.75))) / 1.34
   4.24 * min(stats::sd(x), h) * length(x) ^ (-1 / 5)
+}
+
+kde_helper = function(df) {
+  kde(x = df$x, y = df$y, w = df$weight)
+}
+
+kde_z_extractor = function(kde_df) {
+  kde_df$z
+}
+
+kde_to_df = function(kde) {
+
+  df = expand.grid(
+    x = kde$x,
+    y = kde$y
+  )
+
+  df$z = as.numeric(kde$z)
+
+  return(df)
+
 }
