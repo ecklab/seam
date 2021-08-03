@@ -4,12 +4,15 @@ calc_n_synth = function(df) {
 
 do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool, .pitcher_pool) {
 
+  # TODO: toggle based on pitch type
+  # TODO: return "real matchup" for overlay
+
   pitcher_pitches = get_pitcher_pitches(.bip = .bip,
                                         .pitches = .pitches,
                                         .pitcher = .pitcher)
 
   hands = get_matchup_hands(
-    bip = bip,
+    bip = .bip,
     b_id = .batter,
     p_id = .pitcher
   )
@@ -19,7 +22,7 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
   empirical_pool = make_empirical_pool(
     .batter = .batter,
     .pitcher = .pitcher,
-    .bip = bip
+    .bip = .bip
   )
 
   n = nrow(empirical_pool)
@@ -28,6 +31,11 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
     kde_helper() %>%
     kde_to_df()
 
+  # vs all #####################################################################
+
+  # TODO: pitcher vs all
+  # TODO: batter vs all
+
   # synth batter ###############################################################
 
   synth_batter_pools = lapply(
@@ -35,7 +43,7 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
     make_bip_pool_synth_batter,
     .batter = .batter,
     .pitcher = .pitcher,
-    .bip = bip,
+    .bip = .bip,
     .batter_pool = .batter_pool,
     .stand = hands["b_stands"],
     .p_throws = hands["p_throws"]
@@ -58,7 +66,7 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
     make_bip_pool_synth_pitcher,
     .batter = .batter,
     .pitcher = .pitcher,
-    .bip = bip,
+    .bip = .bip,
     .pitcher_pool = .pitcher_pool,
     .stand = hands["b_stands"],
     .p_throws = hands["p_throws"]
@@ -90,3 +98,17 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
   return(seam_df)
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
