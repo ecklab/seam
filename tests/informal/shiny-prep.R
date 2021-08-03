@@ -40,9 +40,17 @@ ff_synth_trout_verlander_bip = make_bip_pool_synth_batter(
   .p_throws = "R")
 ff_synth_trout_verlander_estimated = kde(x = ff_synth_trout_verlander_bip$x,
                                          y = ff_synth_trout_verlander_bip$y,
-                                         w = ff_synth_trout_verlander_bip$weight,
-                                         lims = c(-150, 150, -10, 200)))
+                                         w = ff_synth_trout_verlander_bip$weight)
 kde_to_df(ff_synth_trout_verlander_estimated)
+
+do_full_seam_matchup(
+  .batter = lu_b(b_lu, "Mike Trout"),
+  .pitcher = lu_p(p_lu, "Justin Verlander"),
+  .pitches = pitches_processed,
+  .bip = bip,
+  .batter_pool = batter_pool,
+  .pitcher_pool = pitcher_pool
+)
 
 ################################################################################
 
@@ -58,10 +66,7 @@ cu = make_bip_pool_synth_pitcher(
   .pitcher_pool = pitcher_pool,
   .stand = "R",
   .p_throws = "R")
-cu_dens = kde(x = cu$x,
-                   y = cu$y,
-                   w = cu$weight,
-                   lims = c(-150, 150, -10, 200))
+cu_dens = kde(x = cu$x, y = cu$y, w = cu$weight)
 cu_df = kde_to_df(cu_dens)
 
 ch = make_bip_pool_synth_pitcher(
@@ -72,10 +77,7 @@ ch = make_bip_pool_synth_pitcher(
   .pitcher_pool = pitcher_pool,
   .stand = "R",
   .p_throws = "R")
-ch_dens = kde(x = ch$x,
-              y = ch$y,
-              w = ch$weight,
-              lims = c(-150, 150, -10, 200))
+ch_dens = kde(x = ch$x, y = ch$y, w = ch$weight)
 ch_df = kde_to_df(ch_dens)
 
 ff = make_bip_pool_synth_pitcher(
@@ -86,10 +88,7 @@ ff = make_bip_pool_synth_pitcher(
   .pitcher_pool = pitcher_pool,
   .stand = "R",
   .p_throws = "R")
-ff_dens = kde(x = ff$x,
-              y = ff$y,
-              w = ff$weight,
-              lims = c(-150, 150, -10, 200))
+ff_dens = kde(x = ff$x, y = ff$y, w = ff$weight)
 ff_df = kde_to_df(ff_dens)
 
 sl = make_bip_pool_synth_pitcher(
@@ -100,10 +99,7 @@ sl = make_bip_pool_synth_pitcher(
   .pitcher_pool = pitcher_pool,
   .stand = "R",
   .p_throws = "R")
-sl_dens = kde(x = sl$x,
-              y = sl$y,
-              w = sl$weight,
-              lims = c(-150, 150, -10, 200))
+sl_dens = kde(x = sl$x, y = sl$y, w = sl$weight,)
 sl_df = kde_to_df(sl_dens)
 
 ################################################################################
