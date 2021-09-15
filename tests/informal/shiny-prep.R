@@ -36,5 +36,7 @@ do_full_seam_matchup(
   .pitches = pitches_processed,
   .bip = bip,
   .batter_pool = batter_pool,
-  .pitcher_pool = pitcher_pool
+  .pitcher_pool = pitcher_pool,
+  .ratio_batter = .60,
+  .ratio_pitcher = .85
 )

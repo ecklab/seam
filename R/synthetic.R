@@ -2,7 +2,7 @@ calc_n_synth = function(df) {
   sum(df$similarity ^ 2)
 }
 
-do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool, .pitcher_pool) {
+do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool, .pitcher_pool, .ratio_batter, .ratio_pitcher) {
 
   # TODO: toggle based on pitch type
   # TODO: return "real matchup" for overlay
@@ -46,7 +46,8 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
     .bip = .bip,
     .batter_pool = .batter_pool,
     .stand = hands["b_stands"],
-    .p_throws = hands["p_throws"]
+    .p_throws = hands["p_throws"],
+    .ratio = .ratio_batter
   )
 
   n_b = sum(sapply(synth_batter_pools, calc_n_synth))
@@ -69,7 +70,8 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
     .bip = .bip,
     .pitcher_pool = .pitcher_pool,
     .stand = hands["b_stands"],
-    .p_throws = hands["p_throws"]
+    .p_throws = hands["p_throws"],
+    .ratio = .ratio_pitcher
   )
 
   n_p = sum(sapply(synth_pitcher_pools, calc_n_synth))
