@@ -178,9 +178,29 @@ make_bip_pool_synth_pitcher = function(.pitch_type, .batter, .pitcher, .bip, .pi
 }
 
 # this will be done in the seam app
-# TODO: should this be done by pitch type? (very unlikely there is enough data)
-make_empirical_pool = function(.batter, .pitcher, .bip) {
-  .bip %>%
-    dplyr::filter(batter == .batter) %>%
-    dplyr::filter(pitcher == .pitcher)
+make_empirical_pool = function(.batter = NULL, .pitcher = NULL, .bip) {
+
+  if (is.null(.batter) & is.null(.pitcher)) {
+    stop("specify at least one of batter or pitcher")
+  }
+
+  if (is.null(.batter)) {
+    pool = .bip %>%
+      dplyr::filter(pitcher == .pitcher)
+  }
+
+  if (is.null(.pitcher)) {
+    pool = .bip %>%
+      dplyr::filter(batter == .batter)
+  }
+
+  if (!is.null(.batter) & !is.null(.pitcher)) {
+    pool = .bip %>%
+      dplyr::filter(batter == .batter) %>%
+      dplyr::filter(pitcher == .pitcher)
+  }
+
+  # consider only returning relevant variables, notably x and y
+  return(pool)
+
 }
