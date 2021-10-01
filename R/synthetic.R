@@ -4,9 +4,6 @@ calc_n_synth = function(df) {
 
 do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool, .pitcher_pool, .ratio_batter, .ratio_pitcher) {
 
-  # TODO: toggle based on pitch type
-  # TODO: return "real matchup" for overlay
-
   pitcher_pitches = get_pitcher_pitches(.bip = .bip,
                                         .pitches = .pitches,
                                         .pitcher = .pitcher)
@@ -33,8 +30,23 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
 
   # vs all #####################################################################
 
-  # TODO: pitcher vs all
-  # TODO: batter vs all
+  empirical_pitcher_pool = make_empirical_pool(
+    .pitcher = .pitcher,
+    .bip = .bip
+  )
+
+  empirical_pitcher_df = empirical_pitcher_pool %>%
+    kde_helper() %>%
+    kde_to_df()
+
+  empirical_batter_pool = make_empirical_pool(
+    .batter = .batter,
+    .bip = .bip
+  )
+
+  empirical_batter_df = empirical_batter_pool %>%
+    kde_helper() %>%
+    kde_to_df()
 
   # synth batter ###############################################################
 
@@ -60,6 +72,9 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
     pitcher_pitches$freq_pitches %>%
     as.vector()
 
+  synth_batter_df = empirical_df
+  synth_batter_df$z = synth_batter_z
+
   # synth pitcher ##############################################################
 
   synth_pitcher_pools = lapply(
@@ -84,6 +99,9 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
     pitcher_pitches$freq_pitches %>%
     as.vector()
 
+  synth_pitcher_df = empirical_df
+  synth_pitcher_df$z = synth_pitcher_z
+
   # combine ####################################################################
 
   lambda = sqrt(n) / (sqrt(n) + sqrt(n_p) + sqrt(n_b))
@@ -97,20 +115,16 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
     lambda_b * synth_batter_z +
     lambda_p * synth_pitcher_z
 
-  return(seam_df)
+  # return #####################################################################
+
+  list(
+    seam_df = seam_df, # full synthetic estimated distribution
+    empirical_pool = empirical_pool, # real matchup data
+    empirical_df = empirical_df, # real matchup estimated distribution
+    empirical_pitcher_df = empirical_pitcher_df, # real pitcher estimated distribution
+    empirical_batter_df = empirical_batter_df, # real batter estimated distribution
+    synth_pitcher_df = synth_pitcher_df, # synthetic pitcher estimated distribution
+    synth_batter_df = synth_batter_df # synthetic batter estimated distribution
+  )
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
