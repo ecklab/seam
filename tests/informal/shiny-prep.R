@@ -30,7 +30,7 @@ get_matchup_hands(
 )
 
 # test a matchup
-do_full_seam_matchup(
+test_matchup = do_full_seam_matchup(
   .batter = lu_b(b_lu, "Mike Trout"),
   .pitcher = lu_p(p_lu, "Justin Verlander"),
   .pitches = pitches_processed,
@@ -40,3 +40,5 @@ do_full_seam_matchup(
   .ratio_batter = .60,
   .ratio_pitcher = .85
 )
+
+str(test_matchup)
