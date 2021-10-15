@@ -42,3 +42,12 @@ test_matchup = do_full_seam_matchup(
 )
 
 str(test_matchup)
+
+library(ggplot2)
+
+plot_df(test_matchup$seam_df)
+plot_df(test_matchup$empirical_df)
+plot_df(test_matchup$empirical_pitcher_df) # is there a handedness issue here?
+plot_df(test_matchup$empirical_batter_df)  # is there a handedness issue here?
+plot_df(test_matchup$synth_pitcher_df)
+plot_df(test_matchup$synth_batter_df)

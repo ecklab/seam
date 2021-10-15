@@ -178,23 +178,28 @@ make_bip_pool_synth_pitcher = function(.pitch_type, .batter, .pitcher, .bip, .pi
 }
 
 # this will be done in the seam app
-make_empirical_pool = function(.batter = NULL, .pitcher = NULL, .bip) {
+# need to consider handedness
+make_empirical_pool = function(.batter = NULL, .pitcher = NULL, .bip, type) {
 
-  if (is.null(.batter) & is.null(.pitcher)) {
-    stop("specify at least one of batter or pitcher")
+  if (is.null(.batter) | is.null(.pitcher)) {
+    stop("both batter and pitcher must be specified")
   }
 
-  if (is.null(.batter)) {
+  hands = get_matchup_hands(bip = .bip, b_id = .batter, p_id = .pitcher)
+
+  if (type == "batter") {
     pool = .bip %>%
-      dplyr::filter(pitcher == .pitcher)
+      dplyr::filter(batter == .batter) %>%
+      dplyr::filter(p_throws == hands[["p_throws"]])
   }
 
-  if (is.null(.pitcher)) {
+  if (type == "pitcher") {
     pool = .bip %>%
-      dplyr::filter(batter == .batter)
+      dplyr::filter(pitcher == .pitcher) %>%
+      dplyr::filter(stand == hands[["b_stands"]])
   }
 
-  if (!is.null(.batter) & !is.null(.pitcher)) {
+  if (type == "both") {
     pool = .bip %>%
       dplyr::filter(batter == .batter) %>%
       dplyr::filter(pitcher == .pitcher)

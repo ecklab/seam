@@ -19,7 +19,8 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
   empirical_pool = make_empirical_pool(
     .batter = .batter,
     .pitcher = .pitcher,
-    .bip = .bip
+    .bip = .bip,
+    type = "both"
   )
 
   n = nrow(empirical_pool)
@@ -31,8 +32,10 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
   # vs all #####################################################################
 
   empirical_pitcher_pool = make_empirical_pool(
+    .batter = .batter,
     .pitcher = .pitcher,
-    .bip = .bip
+    .bip = .bip,
+    type = "pitcher"
   )
 
   empirical_pitcher_df = empirical_pitcher_pool %>%
@@ -41,7 +44,9 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
 
   empirical_batter_pool = make_empirical_pool(
     .batter = .batter,
-    .bip = .bip
+    .pitcher = .pitcher,
+    .bip = .bip,
+    type = "batter"
   )
 
   empirical_batter_df = empirical_batter_pool %>%
@@ -117,6 +122,8 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
 
   # return #####################################################################
 
+  # TODO: combine all data frames into one main df
+  # TODO: x, y is the same for each, only the "z" column differs
   list(
     seam_df = seam_df, # full synthetic estimated distribution
     empirical_pool = empirical_pool, # real matchup data
