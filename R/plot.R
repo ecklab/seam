@@ -1,40 +1,18 @@
-geom_mlb_stadium = function (mapping = NULL, data = NULL, stat = "identity", position = "identity",
-                             na.rm = FALSE, show.legend = NA, inherit.aes = FALSE, stadium_ids = NULL,
-                             stadium_segments = "outfield_outer", stadium_transform_coords = FALSE,
-                             ...) {
+geom_mlb_stadium = function (stadium_ids = "generic", stadium_segments = "all", ...) {
+
   mapping = aes(x = x, y = y, group = segment, ...)
   data = GeomMLBStadiums::MLBStadiumsPathData
-  if (is.null(stadium_ids)) {
-    stadium_ids = "generic"
-  }
-  else if ("all" %in% stadium_ids) {
-    stadium_ids = unique(data$team)
-  }
-  else if ("all_mlb" %in% stadium_ids) {
-    stadium_ids = unique(data$team)
-    cc = which(stadium_ids == "generic")
-    if (length(cc) > 0) {
-      stadium_ids = stadium_ids[-cc]
-    }
-  }
+
   data = do.call(rbind.data.frame, lapply(stadium_ids, function(s) {
     data[(data$team == s), ]
   }))
-  if ("all" %in% stadium_segments) {
-  }
-  else if (!is.null(stadium_segments)) {
-    data = do.call(rbind.data.frame, lapply(stadium_segments,
-                                            function(s) {
-                                              data[(data$segment == s), ]
-                                            }))
-  }
-  if (stadium_transform_coords) {
-    data = mlbam_xy_transformation(data, x = "x", y = "y",
-                                   column_suffix = "")
-  }
-  layer(geom = GeomPath, mapping = mapping, data = data, stat = stat,
-        position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-        params = list(na.rm = na.rm, ...))
+
+  data = mlbam_xy_transformation(data, x = "x", y = "y", column_suffix = "")
+
+  layer(geom = GeomPath, mapping = mapping, data = data, stat = "identity",
+        position = "identity", show.legend = NA, inherit.aes = FALSE,
+        params = list(na.rm = FALSE, ...))
+
 }
 
 mlbam_xy_transformation = function (data, x = "hc_x", y = "hc_y", column_suffix = "_") {
@@ -77,7 +55,5 @@ plot_df = function(df, stadium = "generic", pitcher, batter, main) {
     theme(legend.position = "none") +
     labs(title = main,
          subtitle = paste(batter, "versus", pitcher)) +
-    geom_mlb_stadium(stadium_ids = stadium,
-                     stadium_segments = "all",
-                     stadium_transform_coords = TRUE)
+    geom_mlb_stadium(stadium_ids = stadium)
 }
