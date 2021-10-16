@@ -24,22 +24,11 @@ get_matchup_hands = function(bip, b_id, p_id) {
 
 }
 
-# TODO: for some reason this is current hard-coded as verlander
 # TODO: pre-calculate this information for all pitchers, query within seam
 get_pitcher_pitches = function(.bip, .pitches, .pitcher) {
 
   pitch_ratio = .pitches %>%
-    dplyr::select("events", "pitcher", "pitch_type") %>%
-    dplyr::filter(.data$pitch_type != "") %>%
-    dplyr::filter(.data$pitch_type != "KN") %>%
-    dplyr::filter(.data$pitch_type != "EP") %>%
-    dplyr::filter(.data$pitch_type != "SC") %>%
-    dplyr::filter(.data$pitch_type != "IN") %>%
-    dplyr::filter(.data$pitch_type != "PO") %>%
-    dplyr::mutate(pitch_type = forcats::fct_recode(.data$pitch_type, "CU" = "KC")) %>%
-    dplyr::mutate(pitch_type = forcats::fct_recode(.data$pitch_type, "FF" = "FA")) %>%
-    dplyr::mutate(pitch_type = forcats::fct_recode(.data$pitch_type, "FS" = "FO")) %>%
-    dplyr::filter(.data$pitcher == lu_p(p_lu, "Justin Verlander")) %>%
+    dplyr::filter(.data$pitcher == .pitcher) %>%
     dplyr::group_by(.data$pitch_type) %>%
     dplyr::summarise(n = dplyr::n()) %>%
     dplyr::mutate(freq_pitches = .data$n / sum(.data$n)) %>%  # this needs to be based on pitches instead
