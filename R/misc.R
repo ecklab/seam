@@ -7,17 +7,17 @@ get_matchup_hands = function(bip, b_id, p_id) {
   p_throws = unique(matchup_bip$p_throws)
 
   if (length(b_stands) > 1) {
-    warning("This matchup is not currently supported because the batter switch
-            hits against this pitcher.")
+    stop("This matchup is not currently supported because the batter switch hits
+         against this pitcher.")
   }
 
   if (length(p_throws) > 1) {
-    warning("This matchup is not currently supported because the pitcher does
-            not use a consistent throwing hand against the chosen batter.")
+    stop("This matchup is not currently supported because the pitcher does not
+         use a consistent throwing hand against the chosen batter.")
   }
 
   if (length(b_stands) == 0) {
-    warning("This matchup has not occured in the supplied balls in play.")
+    stop("This matchup has not occured in the supplied balls in play.")
   }
 
   return(c(b_stands = b_stands, p_throws = p_throws))
