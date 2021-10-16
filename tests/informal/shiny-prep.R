@@ -2,6 +2,7 @@
 weeks = generate_weeks(start_year = 2015, end_year = 2021)
 # TODO: should we use years going back this far?
 # TODO: didn't we find an issue with old years when looking at shift data?
+# TODO: consider fitting to 2017 - 2020, validate on 2021
 dled_weeks = apply(weeks, 1, dl_week)
 dled_weeks = dled_weeks[sapply(dled_weeks, function(x) {nrow(x) != 0})]
 pitches = data.table::rbindlist(dled_weeks)
