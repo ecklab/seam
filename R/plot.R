@@ -1,6 +1,6 @@
-geom_mlb_stadium = function (stadium_ids = "generic", stadium_segments = "all", ...) {
+geom_mlb_stadium = function(stadium_ids = "generic", stadium_segments = "all", ...) {
 
-  mapping = aes(x = x, y = y, group = segment, ...)
+  mapping = ggplot2::aes(x = .data$x, y = .data$y, group = .data$segment, ...)
   data = GeomMLBStadiums::MLBStadiumsPathData
 
   data = do.call(rbind.data.frame, lapply(stadium_ids, function(s) {
@@ -9,7 +9,7 @@ geom_mlb_stadium = function (stadium_ids = "generic", stadium_segments = "all", 
 
   data = mlbam_xy_transformation(data, x = "x", y = "y", column_suffix = "")
 
-  layer(geom = GeomPath, mapping = mapping, data = data, stat = "identity",
+  ggplot2::layer(geom = ggplot2::GeomPath, mapping = mapping, data = data, stat = "identity",
         position = "identity", show.legend = NA, inherit.aes = FALSE,
         params = list(na.rm = FALSE, ...))
 
@@ -22,8 +22,8 @@ mlbam_xy_transformation = function (data, x = "hc_x", y = "hc_y", column_suffix 
 }
 
 plot_df = function(df, stadium = "generic", pitcher, batter, main) {
-  ggplot(df, aes(x, y, z = z)) +
-    geom_contour_filled(
+  ggplot2::ggplot(df, ggplot2::aes(x = df$x, y = df$y, z = df$z)) +
+    ggplot2::geom_contour_filled(
       breaks = c(
         0,
         1.068164e-05,
@@ -37,7 +37,7 @@ plot_df = function(df, stadium = "generic", pitcher, batter, main) {
         1e6
       )
     ) +
-    scale_fill_manual(
+    ggplot2::scale_fill_manual(
       values = c(
         '#FFFFFF',
         '#FFFFCC',
@@ -50,10 +50,10 @@ plot_df = function(df, stadium = "generic", pitcher, batter, main) {
         '#bd0026'
       )
     ) +
-    theme_void() +
-    coord_fixed() +
-    theme(legend.position = "none") +
-    labs(title = main,
+    ggplot2::theme_void() +
+    ggplot2::coord_fixed() +
+    ggplot2::theme(legend.position = "none") +
+    ggplot2::labs(title = main,
          subtitle = paste(batter, "versus", pitcher)) +
     geom_mlb_stadium(stadium_ids = stadium)
 }
