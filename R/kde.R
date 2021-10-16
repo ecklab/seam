@@ -3,7 +3,7 @@
 # MASS::kde2d
 # ggtern::kde2d.weighted
 # TODO: consider making default limits to be: lims = c(-150, 150, -10, 200))
-kde = function(x, y = NULL, h = NULL, w = NULL, n = 100, lims = c(-150, 150, -10, 200), ...) {
+kde = function(x, y = NULL, h = NULL, w = NULL, n = 100, lims = c(-150, 150, -50, 200), ...) {
 
   if (is.null(y)) {
     return(stats::density(x, ...))
