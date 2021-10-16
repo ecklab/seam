@@ -43,7 +43,7 @@ mlbam_xy_transformation = function (data, x = "hc_x", y = "hc_y", column_suffix 
   data
 }
 
-plot_df = function(df, stadium = "generic") {
+plot_df = function(df, stadium = "generic", pitcher, batter, main) {
   ggplot(df, aes(x, y, z = z)) +
     geom_contour_filled(
       breaks = c(
@@ -74,6 +74,9 @@ plot_df = function(df, stadium = "generic") {
     ) +
     theme_void() +
     coord_fixed() +
+    theme(legend.position = "none") +
+    labs(title = main,
+         subtitle = paste(batter, "versus", pitcher)) +
     geom_mlb_stadium(stadium_ids = stadium,
                      stadium_segments = "all",
                      stadium_transform_coords = TRUE)

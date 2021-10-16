@@ -1,13 +1,13 @@
-# download data from statcast
-weeks = generate_weeks(start_year = 2015, end_year = 2021)
-# TODO: should we use years going back this far?
-# TODO: didn't we find an issue with old years when looking at shift data?
-# TODO: consider fitting to 2017 - 2020, validate on 2021
-# TODO: this is currently happening inside of the processing functions
-dled_weeks = apply(weeks, 1, dl_week)
-dled_weeks = dled_weeks[sapply(dled_weeks, function(x) {nrow(x) != 0})]
-pitches = data.table::rbindlist(dled_weeks)
-data.table::fwrite(pitches, "data/statcast-all-pitches.csv")
+# # download data from statcast
+# weeks = generate_weeks(start_year = 2015, end_year = 2021)
+# # TODO: should we use years going back this far?
+# # TODO: didn't we find an issue with old years when looking at shift data?
+# # TODO: consider fitting to 2017 - 2020, validate on 2021
+# # TODO: this is currently happening inside of the processing functions
+# dled_weeks = apply(weeks, 1, dl_week)
+# dled_weeks = dled_weeks[sapply(dled_weeks, function(x) {nrow(x) != 0})]
+# pitches = data.table::rbindlist(dled_weeks)
+# data.table::fwrite(pitches, "data/statcast-all-pitches.csv")
 
 # load necessary packages
 library(dplyr)
@@ -77,12 +77,15 @@ test_matchup = do_full_seam_matchup(
 
 str(test_matchup)
 
-plot_df(test_matchup$seam_df, stadium = "astros")
-plot_df(test_matchup$empirical_df)
-plot_df(test_matchup$empirical_pitcher_df) # is there a handedness issue here?
-plot_df(test_matchup$empirical_batter_df)  # is there a handedness issue here?
-plot_df(test_matchup$synth_pitcher_df)
-plot_df(test_matchup$synth_batter_df)
+devtools::load_all()
+p1 = plot_df(test_matchup$seam_df, stadium = "astros", batter = "Trout", pitcher = "Verlander", main = "Full SEAM")
+p2 = plot_df(test_matchup$synth_pitcher_df, stadium = "astros", batter = "Trout", pitcher = "Verlander", main = "Synthetic Pitcher")
+p3 = plot_df(test_matchup$synth_batter_df, stadium = "astros", batter = "Trout", pitcher = "Verlander", main = "Synthetic Batter")
+p4 = plot_df(test_matchup$empirical_df, stadium = "astros", batter = "Trout", pitcher = "Verlander", main = "Empirical Matchup")
+p5 = plot_df(test_matchup$empirical_pitcher_df, stadium = "astros", batter = "Trout", pitcher = "Verlander", main = "Empirical Pitcher")
+p6 = plot_df(test_matchup$empirical_batter_df, stadium = "astros", batter = "Trout", pitcher = "Verlander", main = "Empirical Batter")
+
+cowplot::plot_grid(p1, p2, p3, p4, p5, p6, nrow = 2, ncol = 3)
 
 devtools::load_all()
 doesnt_exist = do_full_seam_matchup(
