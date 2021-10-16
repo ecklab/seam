@@ -1,5 +1,3 @@
-# library(GeomMLBStadiums)
-
 geom_mlb_stadium = function (mapping = NULL, data = NULL, stat = "identity", position = "identity",
                              na.rm = FALSE, show.legend = NA, inherit.aes = FALSE, stadium_ids = NULL,
                              stadium_segments = "outfield_outer", stadium_transform_coords = FALSE,
