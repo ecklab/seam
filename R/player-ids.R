@@ -22,3 +22,25 @@ lu_b = function(.b_lu, .batter_name) {
 
   return(b_info$batter)
 }
+
+get_player_ids = function() {
+  # really need to download a copy of this data for backup and offline use
+  url = "https://raw.githubusercontent.com/chadwickbureau/register/master/data/people.csv"
+  data.table::fread(url, sep = ",") %>%
+    dplyr::select(.data$key_mlbam, .data$name_last, .data$name_first) %>%
+    dplyr::filter(!is.na(.data$key_mlbam))
+}
+
+make_p_lu = function(.bip) {
+  .bip %>%
+    dplyr::mutate(pitcher_name = paste(.data$pitcher_first, .data$pitcher_last)) %>%
+    dplyr::select(.data$pitcher_name, .data$pitcher) %>%
+    dplyr::distinct()
+}
+
+make_b_lu = function(.bip) {
+  .bip %>%
+    dplyr::mutate(batter_name = paste(.data$batter_first, .data$batter_last)) %>%
+    dplyr::select(.data$batter_name, .data$batter) %>%
+    dplyr::distinct()
+}
