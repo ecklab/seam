@@ -1,3 +1,31 @@
+# download data from statcast
+weeks = generate_weeks(start_year = 2015, end_year = 2021)
+# TODO: should we use years going back this far?
+# TODO: didn't we find an issue with old years when looking at shift data?
+dled_weeks = apply(weeks, 1, dl_week)
+dled_weeks = dled_weeks[sapply(dled_weeks, function(x) {nrow(x) != 0})]
+pitches = data.table::rbindlist(dled_weeks)
+# TODO: write this into shiny app directory?
+data.table::fwrite(pitches, "data/statcast-all-pitches.csv")
+
+# load necessary packages
+library(dplyr)
+library(ggplot2)
+
+player_ids = get_player_ids()
+data.table::fwrite(player_ids, "data/player-ids.csv")
+pitches = data.table::fread("data/statcast-all-pitches.csv")
+
+pitches_processed = process_statcast(data = pitches, player_ids = player_ids)
+bip = get_bip(pitches_processed)
+b_lu = make_b_lu(bip)
+p_lu = make_p_lu(bip)
+
+data.table::fwrite(pitches_processed, "data/pitches-processed.csv")
+data.table::fwrite(bip, "data/bip.csv")
+data.table::fwrite(b_lu, "data/b_lu.csv")
+data.table::fwrite(p_lu, "data/p_lu.csv")
+
 # read in data created via statcast-utils
 pitches_processed = data.table::fread("data/pitches-processed.csv")
 bip = data.table::fread("data/bip.csv")
@@ -37,15 +65,13 @@ test_matchup = do_full_seam_matchup(
   .bip = bip,
   .batter_pool = batter_pool,
   .pitcher_pool = pitcher_pool,
-  .ratio_batter = .60,
+  .ratio_batter = .85,
   .ratio_pitcher = .85
 )
 
 str(test_matchup)
 
-library(ggplot2)
-
-plot_df(test_matchup$seam_df)
+plot_df(test_matchup$seam_df, stadium = "astros")
 plot_df(test_matchup$empirical_df)
 plot_df(test_matchup$empirical_pitcher_df) # is there a handedness issue here?
 plot_df(test_matchup$empirical_batter_df)  # is there a handedness issue here?
