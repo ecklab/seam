@@ -80,21 +80,3 @@ plot_df = function(df, stadium = "generic") {
                      stadium_segments = "all",
                      stadium_transform_coords = TRUE)
 }
-
-
-
-
-
-
-# c(
-#   5.772951e-08,
-#   3.220922e-07,
-#   1.065680e-06,
-#   2.569727e-06,
-#   5.385921e-06,
-#   1.018753e-05,
-#   1.676360e-05,
-#   2.502657e-05,
-#   3.513386e-05,
-#   1e6
-# )
