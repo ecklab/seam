@@ -39,7 +39,7 @@ get_pitcher_pitches = function(.bip, .pitches, .pitcher) {
     dplyr::filter(.data$pitcher == .pitcher) %>%
     dplyr::group_by(.data$pitch_type) %>%
     dplyr::summarise(n = dplyr::n()) %>%
-    dplyr::mutate(freq_pitches = .data$n / sum(.data$n)) %>%  # this needs to be based on pitches instead
+    dplyr::mutate(freq_pitches = .data$n / sum(.data$n)) %>%
     dplyr::select("pitch_type", "freq_pitches")
 
   bip_ratio = .bip %>%
@@ -52,6 +52,7 @@ get_pitcher_pitches = function(.bip, .pitches, .pitcher) {
 
   pitcher_ratios$freq_pitches = pitcher_ratios$freq_pitches / sum(pitcher_ratios$freq_pitches)
 
+  # TODO: note that n is based on bip while freq is based on all pitches
   return(pitcher_ratios)
 
 }
