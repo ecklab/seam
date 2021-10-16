@@ -14,21 +14,6 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
     p_id = .pitcher
   )
 
-  # true matchup ###############################################################
-
-  empirical_pool = make_empirical_pool(
-    .batter = .batter,
-    .pitcher = .pitcher,
-    .bip = .bip,
-    type = "both"
-  )
-
-  n = nrow(empirical_pool)
-
-  empirical_df = empirical_pool %>%
-    kde_helper() %>%
-    kde_to_df()
-
   # vs all #####################################################################
 
   empirical_pitcher_pool = make_empirical_pool(
@@ -52,6 +37,29 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
   empirical_batter_df = empirical_batter_pool %>%
     kde_helper() %>%
     kde_to_df()
+
+  # true matchup ###############################################################
+
+  empirical_pool = make_empirical_pool(
+    .batter = .batter,
+    .pitcher = .pitcher,
+    .bip = .bip,
+    type = "both"
+  )
+
+  n = nrow(empirical_pool)
+
+  if (n == 0) {
+    # is this trick ok?
+    empirical_df = empirical_batter_df
+    empirical_df$z = 0
+  }
+
+  if(n > 0) {
+    empirical_df = empirical_pool %>%
+      kde_helper() %>%
+      kde_to_df()
+  }
 
   # synth batter ###############################################################
 

@@ -1,5 +1,5 @@
-# these are functions that don't yet have a home or are holdovers from a previous refactor
-# these are generally more developed that functions in scratch which are being developed from scratch
+# these are generally more developed than functions in scratch which are being developed from scratch
+
 get_matchup_hands = function(bip, b_id, p_id) {
 
   matchup_bip = bip[bip$batter == b_id & bip$pitcher == p_id, ]
@@ -17,7 +17,15 @@ get_matchup_hands = function(bip, b_id, p_id) {
   }
 
   if (length(b_stands) == 0) {
-    stop("This matchup has not occured in the supplied balls in play.")
+    message("This matchup has not occurred. Using most common handedness.")
+    # TODO: we're not actually doing what the warning says at the moment
+    # TOOD: rethink this whole function
+    p_bip = bip[bip$pitcher == p_id, ]
+    b_bip = bip[bip$batter == b_id, ]
+    return(c(
+      b_stands = unique(b_bip$stand),
+      p_throws = unique(p_bip$p_throws)
+    ))
   }
 
   return(c(b_stands = b_stands, p_throws = p_throws))
@@ -40,7 +48,7 @@ get_pitcher_pitches = function(.bip, .pitches, .pitcher) {
     dplyr::summarise(n = dplyr::n())
 
   pitcher_ratios = dplyr::left_join(bip_ratio, pitch_ratio) %>%
-    dplyr::filter(.data$freq_pitches > 0.02) # could change this proportion
+    dplyr::filter(.data$freq_pitches > 0.03) # could change this proportion
 
   pitcher_ratios$freq_pitches = pitcher_ratios$freq_pitches / sum(pitcher_ratios$freq_pitches)
 

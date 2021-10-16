@@ -17,8 +17,8 @@ get_batter_pool = function(bip) {
 
   # batter pool "overall"
   batter_pool_all = bip %>%
-    dplyr::filter(game_year >= 2018) %>%
-    dplyr::filter(game_year <= 2020) %>%
+    # dplyr::filter(game_year >= 2018) %>%
+    # dplyr::filter(game_year <= 2020) %>%
     dplyr::group_by(batter, pitch_type, stand) %>%
     dplyr::summarise(lf_prc = mean(spray_angle < -15),
                      cf_prc = mean(spray_angle >= -15 & spray_angle <= 15),
@@ -102,8 +102,8 @@ get_pitcher_pool = function(bip) {
 
   # pitcher pool "overall"
   pitcher_pool_all = bip %>%
-    dplyr::filter(game_year >= 2018) %>%
-    dplyr::filter(game_year <= 2020) %>%
+    # dplyr::filter(game_year >= 2018) %>%
+    # dplyr::filter(game_year <= 2020) %>%
     dplyr::group_by(pitcher, pitch_type, p_throws) %>%
     dplyr::summarise(release_speed = mean(release_speed),
                      release_spin_rate = mean(release_spin_rate),

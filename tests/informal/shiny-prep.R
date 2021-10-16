@@ -1,13 +1,13 @@
-# # download data from statcast
-# weeks = generate_weeks(start_year = 2015, end_year = 2021)
-# # TODO: should we use years going back this far?
-# # TODO: didn't we find an issue with old years when looking at shift data?
-# # TODO: consider fitting to 2017 - 2020, validate on 2021
-# dled_weeks = apply(weeks, 1, dl_week)
-# dled_weeks = dled_weeks[sapply(dled_weeks, function(x) {nrow(x) != 0})]
-# pitches = data.table::rbindlist(dled_weeks)
-# # TODO: write this into shiny app directory?
-# data.table::fwrite(pitches, "data/statcast-all-pitches.csv")
+# download data from statcast
+weeks = generate_weeks(start_year = 2015, end_year = 2021)
+# TODO: should we use years going back this far?
+# TODO: didn't we find an issue with old years when looking at shift data?
+# TODO: consider fitting to 2017 - 2020, validate on 2021
+# TODO: this is currently happening inside of the processing functions
+dled_weeks = apply(weeks, 1, dl_week)
+dled_weeks = dled_weeks[sapply(dled_weeks, function(x) {nrow(x) != 0})]
+pitches = data.table::rbindlist(dled_weeks)
+data.table::fwrite(pitches, "data/statcast-all-pitches.csv")
 
 # load necessary packages
 library(dplyr)
@@ -84,10 +84,10 @@ plot_df(test_matchup$empirical_batter_df)  # is there a handedness issue here?
 plot_df(test_matchup$synth_pitcher_df)
 plot_df(test_matchup$synth_batter_df)
 
-# a match that currently doesn't exist, so SEAM doesn't run, it should!
-do_full_seam_matchup(
-  .batter = lu_b(b_lu, "Aaron Judge"),
-  .pitcher = lu_p(p_lu, "Rich Hill"),
+devtools::load_all()
+doesnt_exist = do_full_seam_matchup(
+  .batter = lu_b(b_lu, "Shohei Ohtani"),
+  .pitcher = lu_p(p_lu, "Shohei Ohtani"),
   .pitches = pitches_processed,
   .bip = bip,
   .batter_pool = batter_pool,
@@ -95,3 +95,5 @@ do_full_seam_matchup(
   .ratio_batter = .85,
   .ratio_pitcher = .85
 )
+
+plot_df(doesnt_exist$seam_df, stadium = "angels")

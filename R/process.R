@@ -20,7 +20,7 @@ process_statcast = function(data, player_ids) {
   # or completely hold back for validation
   data = data %>%
     dplyr::filter(lubridate::year(game_date) >= 2017) %>%
-    dplyr::filter(lubridate::year(game_date) <= 2020)
+    dplyr::filter(lubridate::year(game_date) <= 2021)
 
   # add more informative name information
   data = data %>%
