@@ -132,6 +132,7 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
 
   # TODO: combine all data frames into one main df
   # TODO: x, y is the same for each, only the "z" column differs
+  # TODO: instead add classes to each df that can be used for quicker plotting?
   list(
     seam_df = seam_df, # full synthetic estimated distribution
     empirical_pool = empirical_pool, # real matchup data
