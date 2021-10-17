@@ -53,8 +53,13 @@ plot_df = function(df, stadium = "generic", pitcher, batter, main) {
     ) +
     ggplot2::theme_void() +
     ggplot2::coord_fixed() +
-    ggplot2::theme(legend.position = "none") +
-    ggplot2::labs(title = main,
-         subtitle = paste(batter, "versus", pitcher)) +
+    ggplot2::theme(legend.position = "none",
+                   plot.caption = ggplot2::element_text(hjust = 0.5, size = 12),
+                   # plot.subtitle = element_text(vjust = -10),
+                   plot.margin = ggplot2::margin()
+                   ) +
+    ggplot2::labs(caption = main
+                  # subtitle = paste(batter, "versus", pitcher)
+                  ) +
     geom_mlb_stadium(stadium_ids = stadium)
 }
