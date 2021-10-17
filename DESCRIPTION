@@ -1,6 +1,6 @@
 Package: seam
 Title: Functions to Apply SEAM Methodology
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: 
     person(given = "David",
            family = "Dalpiaz",
