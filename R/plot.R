@@ -21,6 +21,7 @@ mlbam_xy_transformation = function (data, x = "hc_x", y = "hc_y", column_suffix 
   data
 }
 
+#' @export
 plot_df = function(df, stadium = "generic", pitcher, batter, main) {
   ggplot2::ggplot(df, ggplot2::aes(x = df$x, y = df$y, z = df$z)) +
     ggplot2::geom_contour_filled(
