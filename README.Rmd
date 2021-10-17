@@ -23,18 +23,15 @@ The goal of {seam} is to implement SEAM methodology in `R`.
 
 ## Installation
 
-You can install the development version from [GitHub](https://github.com/) with:
+Because this package is currently in a private repo, the easiest way to install the package is locally. After cloning the repo, use:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("ecklab/seampkg")
+devtools::install_local(force = TRUE)
 ```
 
 ## TODO
 
-- Look into pitches of type `""`
-- Split pools into overall vs year.
-- Consider removing "n" from some calculations.
 - In general, consider quantiles of various "characteristics"
-- https://baseballwithr.wordpress.com/2018/01/15/chance-of-hit-as-function-of-launch-angle-exit-velocity-and-spray-angle/
-- https://github.com/bdilday/GeomMLBStadiums
+- [Launch Angle and Exit Velo](https://baseballwithr.wordpress.com/2018/01/15/chance-of-hit-as-function-of-launch-angle-exit-velocity-and-spray-angle/)
+- [GeomMLBStadiums Package](https://github.com/bdilday/GeomMLBStadiums)
