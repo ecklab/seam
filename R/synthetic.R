@@ -2,6 +2,7 @@ calc_n_synth = function(df) {
   sum(df$similarity ^ 2)
 }
 
+#' @export
 do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool, .pitcher_pool, .ratio_batter, .ratio_pitcher) {
 
   pitcher_pitches = get_pitcher_pitches(.bip = .bip,
