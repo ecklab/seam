@@ -19,3 +19,11 @@ dl_week = function(week) {
   )
   data.table::fread(url)
 }
+
+#' @export
+dl_statcast = function(start_year, end_year) {
+  weeks = generate_weeks(start_year = start_year, end_year = end_year)
+  dled_weeks = apply(weeks, 1, dl_week)
+  dled_weeks = dled_weeks[sapply(dled_weeks, function(x) {nrow(x) != 0})]
+  return(data.table::rbindlist(dled_weeks))
+}
