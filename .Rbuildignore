@@ -3,14 +3,6 @@
 ^LICENSE\.md$
 ^README\.Rmd$
 ^\.github$
-^data/pitches-processed\.csv$
-^data/b_lu\.csv$
-^data/p_lu\.csv$
-^data/bip\.csv$
-^data/statcast-all-pitches\.csv$
-^data/pitches-for-ratios\.csv$
-^data/pitcher-pool\.csv$
-^data/batter-pool\.csv$
-^data/player-ids\.csv$
 ^tests/informal/scratch\.R$
 ^tests/informal/shiny-prep\.R$
+^data$
