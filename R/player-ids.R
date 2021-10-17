@@ -1,4 +1,5 @@
 #' @importFrom rlang .data
+#' @export
 lu_p = function(.p_lu, .pitcher_name) {
 
   p_info = .p_lu %>%
@@ -11,6 +12,7 @@ lu_p = function(.p_lu, .pitcher_name) {
   return(p_info$pitcher)
 }
 
+#' @export
 lu_b = function(.b_lu, .batter_name) {
 
   b_info = .b_lu %>%
