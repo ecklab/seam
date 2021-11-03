@@ -5,4 +5,6 @@
 ^\.github$
 ^tests/informal/scratch\.R$
 ^tests/informal/shiny-prep\.R$
-^data$
+^data-raw$
+^app\.R$
+^setup\.R$
