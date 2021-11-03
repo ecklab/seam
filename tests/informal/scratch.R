@@ -1,3 +1,24 @@
+################################################################################
+
+# these are instances where a pitcher throws a pitch, but 0 or 1 bip are
+# generated for that pitcher + batter hand
+
+bip %>%
+  dplyr::filter(batter != lu_b(b_lu, "Freddie Freeman")) %>%
+  dplyr::filter(pitcher == lu_p(p_lu, "Framber Valdez")) %>%
+  dplyr::filter(p_throws == "L") %>%
+  dplyr::filter(stand == "L") %>%
+  dplyr::filter(pitch_type == "CH")
+
+bip %>%
+  dplyr::filter(batter != lu_b(b_lu, "Joey Gallo")) %>%
+  dplyr::filter(pitcher == lu_p(p_lu, "Blake Snell")) %>%
+  dplyr::filter(p_throws == "L") %>%
+  dplyr::filter(stand == "L") %>%
+  dplyr::filter(pitch_type == "FF")
+
+################################################################################
+
 verlander = pitches_processed %>%
   dplyr::filter(pitcher == lu_p(p_lu, "Aroldis Chapman")) %>%
   dplyr::filter(game_year == 2016)

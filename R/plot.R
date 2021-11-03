@@ -37,6 +37,7 @@ plot_df = function(df, stadium = "generic", pitcher, batter, main) {
         8.545279e-05,
         1e6
       )
+      # breaks = quantile(z, seq(0, 1, 0.1))
     ) +
     ggplot2::scale_fill_manual(
       values = c(

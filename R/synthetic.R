@@ -76,6 +76,9 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
     .ratio = .ratio_batter
   )
 
+  # print(pitcher_pitches)
+  # print(synth_batter_pools)
+
   n_b = sum(sapply(synth_batter_pools, calc_n_synth))
 
   synth_batter_z = lapply(synth_batter_pools, kde_helper) %>%

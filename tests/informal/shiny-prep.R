@@ -40,9 +40,10 @@ p_lu = data.table::fread("../seamapp/data/p_lu.csv")
 batter_pool = data.table::fread("../seamapp/data/batter-pool.csv")
 pitcher_pool = data.table::fread("../seamapp/data/pitcher-pool.csv")
 
+devtools::load_all()
 test_matchup = do_full_seam_matchup(
-  .batter = lu_b(b_lu, "Shohei Ohtani"),
-  .pitcher = lu_p(p_lu, "Shohei Ohtani"),
+  .batter = lu_b(b_lu, "Joey Gallo"),
+  .pitcher = lu_p(p_lu, "Blake Snell"),
   .pitches = pitches_for_ratios,
   .bip = bip,
   .batter_pool = batter_pool,
