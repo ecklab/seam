@@ -1,3 +1,6 @@
+# load package functions
+devtools::load_all()
+
 # create data-raw directory if it does not exist
 if (!dir.exists("data-raw")) {
   dir.create("data-raw")
