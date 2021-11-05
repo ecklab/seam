@@ -50,13 +50,14 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
 
   n = nrow(empirical_pool)
 
-  if (n == 0) {
+  # DO WE REALLY WANT TO DO THIS WHEN n = 1?
+  if (n == 0 | n == 1) {
     # is this trick ok?
     empirical_df = empirical_batter_df
     empirical_df$z = 0
   }
 
-  if(n > 0) {
+  if(n > 1) {
     empirical_df = empirical_pool %>%
       kde_helper() %>%
       kde_to_df()
@@ -75,6 +76,7 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
     .p_throws = hands["p_throws"],
     .ratio = .ratio_batter
   )
+
 
   # print(pitcher_pitches)
   # print(synth_batter_pools)
