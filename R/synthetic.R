@@ -3,17 +3,25 @@ calc_n_synth = function(df) {
 }
 
 #' @export
-do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool, .pitcher_pool, .ratio_batter, .ratio_pitcher) {
-
-  pitcher_pitches = get_pitcher_pitches(.bip = .bip,
-                                        .pitches = .pitches,
-                                        .pitcher = .pitcher)
+do_full_seam_matchup = function(.batter, .pitcher, .bip, .batter_pool, .pitcher_pool, .ratio_batter, .ratio_pitcher) {
 
   hands = get_matchup_hands(
     bip = .bip,
     b_id = .batter,
     p_id = .pitcher
   )
+
+  pitcher_pitches = get_pitcher_pitches(.bip = .bip,
+                                        .pitcher = .pitcher,
+                                        .stands = hands[["b_stands"]])
+
+  batter_pitches = get_batter_pitches(.bip = .bip,
+                                      .batter = .batter,
+                                      .p_throws = hands[["p_throws"]])
+
+  if(nrow(batter_pitches) < 1) {
+    stop("Batter does not have any balls in play against the handedness of the selected pitcher.")
+  }
 
   # vs all #####################################################################
 
@@ -76,7 +84,6 @@ do_full_seam_matchup = function(.batter, .pitcher, .pitches, .bip, .batter_pool,
     .p_throws = hands["p_throws"],
     .ratio = .ratio_batter
   )
-
 
   # print(pitcher_pitches)
   # print(synth_batter_pools)
