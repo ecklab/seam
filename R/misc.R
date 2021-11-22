@@ -32,30 +32,31 @@ get_matchup_hands = function(bip, b_id, p_id) {
 
 }
 
-# TODO: pre-calculate this information for all pitchers, query within seam
-get_pitcher_pitches = function(.bip, .pitches, .pitcher, .batter) {
-
-  # pitch_ratio = .pitches %>%
-  #   dplyr::filter(.data$pitcher == .pitcher) %>%
-  #   dplyr::group_by(.data$pitch_type) %>%
-  #   dplyr::summarise(n = dplyr::n()) %>%
-  #   dplyr::mutate(freq_pitches = .data$n / sum(.data$n)) %>%
-  #   dplyr::select("pitch_type", "freq_pitches")
+get_pitcher_pitches = function(.bip, .pitcher, .stands) {
 
   bip_ratio = .bip %>%
     dplyr::filter(.data$pitcher == .pitcher) %>%
-    dplyr::filter(.data$stand == "L") %>%
+    dplyr::filter(.data$stand == .stands) %>%
     dplyr::group_by(.data$pitch_type) %>%
     dplyr::summarise(n = dplyr::n()) %>%
     dplyr::mutate(freq_pitches = .data$n / sum(.data$n)) %>%
     dplyr::filter(.data$freq_pitches > 0.03) # could change this proportion
 
-  # pitcher_ratios = dplyr::left_join(bip_ratio, pitch_ratio) %>%
-  #   dplyr::filter(.data$freq_pitches > 0.03) # could change this proportion
-
-  # pitcher_ratios$freq_pitches = pitcher_ratios$freq_pitches / sum(pitcher_ratios$freq_pitches)
-
-  # TODO: note that n is based on bip while freq is based on all pitches
   return(bip_ratio)
 
 }
+
+get_batter_pitches = function(.bip, .batter, .p_throws) {
+
+  bip_ratio = .bip %>%
+    dplyr::filter(.data$batter == .batter) %>%
+    dplyr::filter(.data$p_throws == .p_throws) %>%
+    dplyr::group_by(.data$pitch_type) %>%
+    dplyr::summarise(n = dplyr::n()) %>%
+    dplyr::mutate(freq_pitches = .data$n / sum(.data$n)) %>%
+    dplyr::filter(.data$freq_pitches > 0.03) # could change this proportion
+
+  return(bip_ratio)
+
+}
+
