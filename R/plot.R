@@ -16,8 +16,8 @@ geom_mlb_stadium = function(stadium_ids = "generic", stadium_segments = "all", .
 }
 
 mlbam_xy_transformation = function (data, x = "hc_x", y = "hc_y", column_suffix = "_") {
-  data[, paste0(x, column_suffix)] = (data[, x] - 125)
-  data[, paste0(y, column_suffix)] = (199 - data[, y])
+  data[, paste0(x, column_suffix)] = (data[, x] - 125.42)
+  data[, paste0(y, column_suffix)] = (198.27 - data[, y])
   data
 }
 
