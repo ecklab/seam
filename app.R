@@ -1,8 +1,7 @@
 library(shiny)
-library(patchwork)
-library(tidyverse)
+library(ggplot2)
+library(dplyr)
 
-pitches_for_ratios = data.table::fread("data-raw/pitches-for-ratios.csv")
 bip = data.table::fread("data-raw/bip.csv")
 b_lu = data.table::fread("data-raw/b_lu.csv")
 p_lu = data.table::fread("data-raw/p_lu.csv")
@@ -10,6 +9,7 @@ batter_pool = data.table::fread("data-raw/batter-pool.csv")
 pitcher_pool = data.table::fread("data-raw/pitcher-pool.csv")
 
 shiny_seam_helper = function(b, p, br, pr, stadium = "generic") {
+
   seam = do_full_seam_matchup(
     .batter = lu_b(b_lu, b),
     .pitcher = lu_p(p_lu, p),
@@ -28,42 +28,40 @@ shiny_seam_helper = function(b, p, br, pr, stadium = "generic") {
   p5 = plot_df(seam$empirical_pitcher_df, stadium = stadium, batter = b, pitcher = p, main = "Empirical Pitcher")
   p6 = plot_df(seam$empirical_batter_df, stadium = stadium, batter = b, pitcher = p, main = "Empirical Batter")
 
-  layout = "ABC
-            DEF"
-
-  p1 + p2 + p3 + p4 + p5 + p6  + plot_layout(design = layout)
+  list(p1 = p1, p2 = p2, p3 = p3, p4 = p4, p5 = p5, p6 = p6)
 
 }
 
-# Define UI for application that draws a histogram
 ui = fluidPage(
 
-    # Application title
-    titlePanel("SEAM"),
+  titlePanel("SEAM: Synthetic Estimated Average Matchup"),
 
-    theme = bslib::bs_theme(bootswatch = "united"),
+  theme = bslib::bs_theme(bootswatch = "united", primary = "#31a354"),
 
-  fluidRow(
-    column(4,
-           selectInput("pitcher", label = "Pitcher", choices = unique(p_lu$pitcher_name), selected = "Justin Verlander", selectize = TRUE),
-           sliderInput("p_ratio", "Ratio of Stuff to Release", min = .50, max = 1, value = .85, step = .01)
-           ),
-    column(4,
-           selectInput("batter", label = "Batter", choices = unique(b_lu$batter_name), selected = "Mike Trout", selectize = TRUE),
-           sliderInput("b_ratio", "Ratio of LA/EV to Batted Ball Location", min = 0, max = 1, value = .85, step = .01),
-           ),
-    column(4,
-           selectInput("stadium", label = "Stadium", choices = unique(GeomMLBStadiums::MLBStadiumsPathData$team), selected = "white_sox", selectize = TRUE)
-           )
-  ),
- fluidRow(
-     plotOutput("distPlot", height = "1200px")
+  sidebarLayout(
+
+    sidebarPanel(
+      selectInput("pitcher", label = "Pitcher", choices = sort(unique(p_lu$pitcher_name)), selected = "Justin Verlander", selectize = TRUE),
+      sliderInput("p_ratio", "Ratio of Stuff to Release", min = .50, max = 1, value = .85, step = .01),
+      selectInput("batter", label = "Batter", choices = sort(unique(b_lu$batter_name)), selected = "Mike Trout", selectize = TRUE),
+      sliderInput("b_ratio", "Ratio of LA/EV to Batted Ball Location", min = 0, max = 1, value = .85, step = .01),
+      selectInput("stadium", label = "Stadium", choices = unique(GeomMLBStadiums::MLBStadiumsPathData$team), selected = "white_sox", selectize = TRUE)
+    ),
+
+    mainPanel(
+      tabsetPanel(type = "tabs",
+                  tabPanel("Full SEAM", plotOutput("plot_full", height = 600)),
+                  tabPanel("SEAM Components", plotOutput("plot_comp")),
+                  tabPanel("All Plots", plotOutput("plot_all"))
+      )
+    )
   )
+
 )
 
-# Define server logic required to draw a histogram
 server = function(input, output) {
-  output$distPlot = renderPlot({
+
+  matchup = reactive({
     shiny_seam_helper(
       b = input$batter,
       p = input$pitcher,
@@ -72,7 +70,27 @@ server = function(input, output) {
       stadium = input$stadium
     )
   })
+
+  output$plot_full = renderPlot({
+    matchup()$p1
+  })
+
+  output$plot_comp = renderPlot({
+    gridExtra::grid.arrange(matchup()$p4, matchup()$p2, matchup()$p3, ncol = 3)
+  })
+
+  output$plot_all = renderPlot({
+    gridExtra::grid.arrange(
+      matchup()$p1,
+      matchup()$p2,
+      matchup()$p3,
+      matchup()$p4,
+      matchup()$p5,
+      matchup()$p6,
+      ncol = 3
+    )
+  })
+
 }
 
-# Run the application
 shinyApp(ui = ui, server = server)
