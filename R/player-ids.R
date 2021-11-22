@@ -40,9 +40,9 @@ make_p_lu = function(.bip) {
     dplyr::distinct()
 }
 
-make_b_lu = function(.bip) {
-  .bip %>%
+make_b_lu = function(.pitches) {
+  .pitches %>%
     dplyr::mutate(batter_name = paste(.data$batter_first, .data$batter_last)) %>%
-    dplyr::select(.data$batter_name, .data$batter) %>%
+    dplyr::select(.data$batter_name, .data$batter, .data$team) %>%
     dplyr::distinct()
 }

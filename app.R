@@ -8,12 +8,19 @@ p_lu = data.table::fread("data-raw/p_lu.csv")
 batter_pool = data.table::fread("data-raw/batter-pool.csv")
 pitcher_pool = data.table::fread("data-raw/pitcher-pool.csv")
 
+# TODO: clean this up, remove dependencies
+mlb_logos = readRDS(url("https://github.com/danmorse314/dinger-machine/raw/main/data/mlb_logos.rds"))
+mlb_logos = mlb_logos %>%
+  select(stadium, full_team_name, team, team_abbr)
+
+stadiums = mlb_logos$team
+names(stadiums) = mlb_logos$stadium
+
 shiny_seam_helper = function(b, p, br, pr, stadium = "generic") {
 
   seam = do_full_seam_matchup(
     .batter = lu_b(b_lu, b),
     .pitcher = lu_p(p_lu, p),
-    .pitches = pitches_for_ratios,
     .bip = bip,
     .batter_pool = batter_pool,
     .pitcher_pool = pitcher_pool,
@@ -41,11 +48,11 @@ ui = fluidPage(
   sidebarLayout(
 
     sidebarPanel(
-      selectInput("pitcher", label = "Pitcher", choices = sort(unique(p_lu$pitcher_name)), selected = "Justin Verlander", selectize = TRUE),
+      selectInput("pitcher", label = "Pitcher", choices = sort(unique(p_lu$pitcher_name)), selected = "Justin Verlander"),
       sliderInput("p_ratio", "Ratio of Stuff to Release", min = .50, max = 1, value = .85, step = .01),
-      selectInput("batter", label = "Batter", choices = sort(unique(b_lu$batter_name)), selected = "Mike Trout", selectize = TRUE),
+      selectInput("batter", label = "Batter", choices = sort(unique(b_lu$batter_name)), selected = "Mike Trout"),
       sliderInput("b_ratio", "Ratio of LA/EV to Batted Ball Location", min = 0, max = 1, value = .85, step = .01),
-      selectInput("stadium", label = "Stadium", choices = unique(GeomMLBStadiums::MLBStadiumsPathData$team), selected = "white_sox", selectize = TRUE)
+      selectInput("stadium", label = "Stadium", choices = stadiums, selected = "angels")
     ),
 
     mainPanel(
@@ -61,8 +68,14 @@ ui = fluidPage(
 
 server = function(input, output) {
 
+  observeEvent(input$batter, {
+    updateSelectInput(inputId = "stadium",
+                      selected = mlb_logos$team[which(mlb_logos$team_abbr == dplyr::pull(dplyr::filter(b_lu, batter == lu_b(.b_lu = b_lu, input$batter)), team))])
+  })
+
   matchup = reactive({
     shiny_seam_helper(
+      # b = isolate(input$batter),
       b = input$batter,
       p = input$pitcher,
       br = input$b_ratio,

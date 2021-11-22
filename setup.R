@@ -1,3 +1,5 @@
+library(tidyverse)
+
 # load package functions
 devtools::load_all()
 
@@ -9,15 +11,15 @@ if (!dir.exists("data-raw")) {
 # download and write data to disk
 # this will take a non-trivial amount of time
 pitches = dl_statcast(start_year = 2017, end_year = 2021)
-data.table::fwrite(pitches, "data/statcast-all-pitches.csv")
+data.table::fwrite(pitches, "data-raw/statcast-all-pitches.csv")
 
 # pre data
 player_ids = get_player_ids()
-pitches = data.table::fread("data/statcast-all-pitches.csv")
+pitches = data.table::fread("data-raw/statcast-all-pitches.csv")
 pitches_processed = process_statcast(data = pitches, player_ids = player_ids)
 bip = get_bip(pitches_processed)
 pitches_for_ratios = get_pitches_for_pitch_ratio(pitches_processed)
-b_lu = make_b_lu(bip)
+b_lu = make_b_lu(pitches_processed)
 p_lu = make_p_lu(bip)
 batter_pool = get_batter_pool(bip = bip)
 pitcher_pool = get_pitcher_pool(bip = bip)

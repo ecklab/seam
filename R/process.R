@@ -90,6 +90,16 @@ process_statcast = function(data, player_ids) {
   data$iso_value                       = as.numeric(data$iso_value)
   data$launch_speed_angle              = as.numeric(data$launch_speed_angle)
 
+  to_get_teams = data %>%
+    dplyr::select(game_date, batter, home_team, away_team, inning_topbot) %>%
+    dplyr::arrange(dplyr::desc(game_date)) %>%
+    dplyr::mutate(batter_team = ifelse(inning_topbot == "Top", away_team, home_team)) %>%
+    dplyr::group_by(batter) %>%
+    dplyr::summarise(team = names(which.max(table(batter_team))))
+
+    data = data %>%
+    dplyr::left_join(to_get_teams, by = "batter") %>%
+
   # return result
   return(data)
 }
@@ -135,7 +145,7 @@ get_bip = function(statcast_pitches) {
     dplyr::select(-.data$hc_x, -.data$hc_y) %>%
     dplyr::mutate(pitch_launch_h_c = atan(.data$vx0 / .data$vy0)) %>%
     dplyr::mutate(pitch_launch_v_c = atan(.data$vx0 / sqrt(.data$vx0 ^ 2 + .data$vy0 ^ 2))) %>%
-    dplyr::mutate(spray_angle = atan(.data$x / .data$y) * 180 / pi)# need to "adjust" for handedness ???
+    dplyr::mutate(spray_angle = atan(.data$x / .data$y) * 180 / pi) # need to "adjust" for handedness ???
 
 }
 
