@@ -24,11 +24,17 @@ mlbam_xy_transformation = function (data, x = "hc_x", y = "hc_y", column_suffix 
 #' @export
 plot_df = function(df, stadium = "generic", pitcher, batter, main) {
 
-  c = 3 * 2.3
+  # TODO: mirror this and the validate code
+  x_diff = (150 + 150) / 99
+  y_diff = (200 + 30) / 99
+  c = x_diff * y_diff
+
+  total = sum(df$z * c)
+  df$z = df$z / total
 
   df = df %>%
-    arrange(.data$z) %>%
-    mutate(cum_dens = cumsum(.data$z * c))
+    dplyr::arrange(.data$z) %>%
+    dplyr::mutate(cum_dens = cumsum(.data$z * c))
 
   find_cut = function(cut, df) {
     df$z[min(which(df$cum_dens > cut))]
