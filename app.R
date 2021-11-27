@@ -71,7 +71,7 @@ ui = fluidPage(
 server = function(input, output, session) {
 
   observeEvent(input$batter, {
-
+    freezeReactiveValue(input, "stadium")
     updateSelectInput(inputId = "stadium",
                       selected = mlb_logos$team[which(mlb_logos$team_abbr == dplyr::pull(dplyr::filter(b_lu, batter == lu_b(.b_lu = b_lu, input$batter)), team))])
 
