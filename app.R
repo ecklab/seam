@@ -79,7 +79,6 @@ server = function(input, output, session) {
 
   matchup = reactive({
     shiny_seam_helper(
-      # b = isolate(input$batter),
       b = input$batter,
       p = input$pitcher,
       br = input$b_ratio,
