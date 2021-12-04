@@ -2,19 +2,13 @@ library("shiny", quietly = TRUE, warn.conflicts = FALSE)
 library("ggplot2", quietly = TRUE, warn.conflicts = FALSE)
 library("dplyr", quietly = TRUE, warn.conflicts = FALSE)
 
-bip = data.table::fread("data-raw/bip.csv")
-b_lu = data.table::fread("data-raw/b_lu.csv")
-p_lu = data.table::fread("data-raw/p_lu.csv")
-batter_pool = data.table::fread("data-raw/batter-pool.csv")
-pitcher_pool = data.table::fread("data-raw/pitcher-pool.csv")
-
-# TODO: clean this up, remove dependencies
-mlb_logos = readRDS(url("https://github.com/danmorse314/dinger-machine/raw/main/data/mlb_logos.rds"))
-mlb_logos = mlb_logos %>%
-  dplyr::select(stadium, full_team_name, team, team_abbr)
-
-stadiums = mlb_logos$team
-names(stadiums) = mlb_logos$stadium
+bip = readRDS("data/bip.Rds")
+b_lu = readRDS("data/b-lu.Rds")
+p_lu = readRDS("data/p-lu.Rds")
+batter_pool = readRDS("data/batter-pool.Rds")
+pitcher_pool = readRDS("data/pitcher-pool.Rds")
+mlb_teams = readRDS("data/mlb-teams.Rds")
+stadiums = readRDS("data/stadiums.Rds")
 
 shiny_seam_helper = function(b, p, br, pr, stadium = "generic") {
 
@@ -40,13 +34,9 @@ shiny_seam_helper = function(b, p, br, pr, stadium = "generic") {
 }
 
 ui = fluidPage(
-
   titlePanel("SEAM: Synthetic Estimated Average Matchup"),
-
   theme = bslib::bs_theme(bootswatch = "united", primary = "#31a354"),
-
   sidebarLayout(
-
     sidebarPanel(
       selectInput("pitcher", label = "Pitcher", choices = sort(unique(p_lu$pitcher_name)), selected = "Justin Verlander"),
       sliderInput("p_ratio", "Ratio of Stuff to Release", min = .50, max = 1, value = .85, step = .01),
@@ -56,7 +46,6 @@ ui = fluidPage(
       hr(),
       selectInput("stadium", label = "Stadium", choices = stadiums, selected = "angels"),
     ),
-
     mainPanel(
       tabsetPanel(type = "tabs",
                   tabPanel("Full SEAM", plotOutput("plot_full", height = 600)),
@@ -65,7 +54,6 @@ ui = fluidPage(
       )
     )
   )
-
 )
 
 server = function(input, output, session) {
@@ -73,7 +61,9 @@ server = function(input, output, session) {
   observeEvent(input$batter, {
     freezeReactiveValue(input, "stadium")
     updateSelectInput(inputId = "stadium",
-                      selected = mlb_logos$team[which(mlb_logos$team_abbr == dplyr::pull(dplyr::filter(b_lu, batter == lu_b(.b_lu = b_lu, input$batter)), team))])
+                      selected = get_batter_stadium(.b_lu = b_lu,
+                                                    teams = mlb_teams,
+                                                    .batter = input$batter))
 
   })
 

@@ -97,7 +97,7 @@ process_statcast = function(data, player_ids) {
     dplyr::group_by(batter) %>%
     dplyr::summarise(team = names(which.max(table(batter_team))))
 
-    data = data %>%
+  data = data %>%
     dplyr::left_join(to_get_teams, by = "batter") %>%
 
   # return result
@@ -147,18 +147,4 @@ get_bip = function(statcast_pitches) {
     dplyr::mutate(pitch_launch_v_c = atan(.data$vx0 / sqrt(.data$vx0 ^ 2 + .data$vy0 ^ 2))) %>%
     dplyr::mutate(spray_angle = atan(.data$x / .data$y) * 180 / pi) # need to "adjust" for handedness ???
 
-}
-
-get_pitches_for_pitch_ratio = function(pitches_processed) {
-  pitches_processed %>%
-    dplyr::select("events", "pitcher", "pitch_type") %>%
-    dplyr::filter(.data$pitch_type != "") %>%
-    dplyr::filter(.data$pitch_type != "KN") %>%
-    dplyr::filter(.data$pitch_type != "EP") %>%
-    dplyr::filter(.data$pitch_type != "SC") %>%
-    dplyr::filter(.data$pitch_type != "IN") %>%
-    dplyr::filter(.data$pitch_type != "PO") %>%
-    dplyr::mutate(pitch_type = forcats::fct_recode(.data$pitch_type, "CU" = "KC")) %>%
-    dplyr::mutate(pitch_type = forcats::fct_recode(.data$pitch_type, "FF" = "FA")) %>%
-    dplyr::mutate(pitch_type = forcats::fct_recode(.data$pitch_type, "FS" = "FO"))
 }

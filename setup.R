@@ -1,6 +1,7 @@
+# load packages necessary for setup
 library(tidyverse)
 
-# load package functions
+# load {seam} package functions, some necessary for setup
 devtools::load_all()
 
 # create data-raw directory if it does not exist
@@ -8,28 +9,59 @@ if (!dir.exists("data-raw")) {
   dir.create("data-raw")
 }
 
-# download and write data to disk
-# this will take a non-trivial amount of time
-pitches = dl_statcast(start_year = 2017, end_year = 2021)
-data.table::fwrite(pitches, "data-raw/statcast-all-pitches.csv")
+# create data directory if it does not exist
+if (!dir.exists("data")) {
+  dir.create("data")
+}
 
-# pre data
-player_ids = get_player_ids()
-pitches = data.table::fread("data-raw/statcast-all-pitches.csv")
-pitches_processed = process_statcast(data = pitches, player_ids = player_ids)
-bip = get_bip(pitches_processed)
-pitches_for_ratios = get_pitches_for_pitch_ratio(pitches_processed)
-b_lu = make_b_lu(pitches_processed)
-p_lu = make_p_lu(bip)
-batter_pool = get_batter_pool(bip = bip)
-pitcher_pool = get_pitcher_pool(bip = bip)
+# download full data from statcast if it does not exist locally
+if (!file.exists("data-raw/statcast-all-pitches.csv")) {
+  pitches = dl_statcast(start_year = 2017, end_year = 2021)
+  data.table::fwrite(pitches, "data-raw/statcast-all-pitches.csv")
+}
 
-# write data to disk
-data.table::fwrite(player_ids, "data-raw/player-ids.csv")
-data.table::fwrite(pitches_processed, "data-raw/pitches-processed.csv")
-data.table::fwrite(bip, "data-raw/bip.csv")
-data.table::fwrite(pitches_for_ratios, "data-raw/pitches-for-ratios.csv")
-data.table::fwrite(b_lu, "data-raw/b_lu.csv")
-data.table::fwrite(p_lu, "data-raw/p_lu.csv")
-data.table::fwrite(batter_pool, "data-raw/batter-pool.csv")
-data.table::fwrite(pitcher_pool, "data-raw/pitcher-pool.csv")
+# prepare player ids
+if (!file.exists("data/player-ids.Rds")) {
+  player_ids = get_player_ids()
+  saveRDS(player_ids, "data/player-ids.Rds")
+}
+
+# process statcast data
+if (!file.exists("data-raw/pitches-processed.csv")) {
+
+  if (!exists("pitches") | !exists("player_ids")) {
+    pitches = data.table::fread("data-raw/statcast-all-pitches.csv")
+    player_ids = readRDS("data/player-ids.Rds")
+  }
+
+  # process
+  pitches_processed = process_statcast(data = pitches, player_ids = player_ids)
+  bip = get_bip(pitches_processed)
+  b_lu = make_b_lu(pitches_processed)
+  p_lu = make_p_lu(bip)
+  batter_pool = get_batter_pool(bip = bip)
+  pitcher_pool = get_pitcher_pool(bip = bip)
+
+  # save
+  data.table::fwrite(pitches_processed, "data-raw/pitches-processed.csv")
+  saveRDS(bip, "data/bip.Rds")
+  saveRDS(b_lu, "data/b-lu.Rds")
+  saveRDS(p_lu, "data/p-lu.Rds")
+  saveRDS(batter_pool, "data/batter-pool.Rds")
+  saveRDS(pitcher_pool, "data/pitcher-pool.Rds")
+
+}
+
+# get team and stadium information
+if (!file.exists("data/mlb-teams.Rds") | !file.exists("data/stadiums.Rds")) {
+  mlb_teams = readRDS(url("https://github.com/danmorse314/dinger-machine/raw/main/data/mlb_logos.rds"))
+  mlb_teams = mlb_teams %>%
+    dplyr::select(stadium, full_team_name, team, team_abbr)
+  stadiums = mlb_teams$team
+  names(stadiums) = mlb_teams$stadium
+  saveRDS(mlb_teams, "data/mlb-teams.Rds")
+  saveRDS(stadiums, "data/stadiums.Rds")
+}
+
+
+

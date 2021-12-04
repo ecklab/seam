@@ -8,3 +8,4 @@
 ^data-raw$
 ^app\.R$
 ^setup\.R$
+^data$

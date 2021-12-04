@@ -60,3 +60,13 @@ get_batter_pitches = function(.bip, .batter, .p_throws) {
 
 }
 
+# this function isn't great, but makes it easier to update the stadium
+get_batter_stadium = function(.b_lu, teams, .batter) {
+
+  b_team = .b_lu %>%
+    filter(.data$batter == lu_b(.b_lu = .b_lu, .batter)) %>%
+    pull(team)
+
+  teams$team[which(teams$team_abbr == b_team)]
+
+}
