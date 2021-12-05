@@ -1,5 +1,3 @@
-# these are generally more developed than functions in scratch which are being developed from scratch
-
 get_matchup_hands = function(bip, b_id, p_id) {
 
   matchup_bip = bip[bip$batter == b_id & bip$pitcher == p_id, ]
@@ -18,13 +16,13 @@ get_matchup_hands = function(bip, b_id, p_id) {
 
   if (length(b_stands) == 0) {
     message("This matchup has not occurred. Using most common handedness.")
-    # TODO: we're not actually doing what the warning says at the moment
-    # TOOD: rethink this whole function
     p_bip = bip[bip$pitcher == p_id, ]
     b_bip = bip[bip$batter == b_id, ]
+    b_stands = table(b_bip$stand)
+    p_throws = table(p_bip$p_throws)
     return(c(
-      b_stands = unique(b_bip$stand),
-      p_throws = unique(p_bip$p_throws)
+      b_stands = names(b_stands[which.max(table(b_stands))]),
+      p_throws = names(p_throws[which.max(table(p_throws))])
     ))
   }
 
