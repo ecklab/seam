@@ -68,3 +68,8 @@ get_batter_stadium = function(.b_lu, teams, .batter) {
   teams$team[which(teams$team_abbr == b_team)]
 
 }
+
+re_weight = function(df, prop) {
+  df$weight = df$weight * prop
+  df
+}
