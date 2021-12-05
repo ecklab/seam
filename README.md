@@ -1,11 +1,7 @@
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 # seam
 
 <!-- badges: start -->
-
-[![R-CMD-check](https://github.com/ecklab/seam/workflows/R-CMD-check/badge.svg)](https://github.com/ecklab/seam/actions)
+[![run-tets](https://github.com/ecklab/seam/workflows/run-tests/badge.svg)](https://github.com/ecklab/seam/actions)
 <!-- badges: end -->
 
 The goal of {seam} is to implement SEAM methodology in `R`.
