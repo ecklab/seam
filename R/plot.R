@@ -1,7 +1,9 @@
 geom_mlb_stadium = function(stadium_ids = "generic", stadium_segments = "all", ...) {
 
   mapping = ggplot2::aes(x = .data$x, y = .data$y, group = .data$segment, ...)
-  data = GeomMLBStadiums::MLBStadiumsPathData
+
+  # TODO: this is a really silly hack currently
+  data = readRDS("data/stadium-paths.Rds")
 
   data = do.call(rbind.data.frame, lapply(stadium_ids, function(s) {
     data[(data$team == s), ]
@@ -24,6 +26,7 @@ mlbam_xy_transformation = function (data, x = "hc_x", y = "hc_y", column_suffix 
 plot_df = function(df, stadium = "generic", main) {
 
   # TODO: mirror this and the validate code
+  # TODO: extract function to use for both
   x_diff = (150 + 150) / 99
   y_diff = (200 + 30) / 99
   c = x_diff * y_diff

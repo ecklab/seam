@@ -27,8 +27,6 @@ devtools::install_local(force = TRUE)
 
 ## TODO
 
--   In general, consider quantiles of various “characteristics”
--   [Launch Angle and Exit
-    Velo](https://baseballwithr.wordpress.com/2018/01/15/chance-of-hit-as-function-of-launch-angle-exit-velocity-and-spray-angle/)
--   [GeomMLBStadiums
-    Package](https://github.com/bdilday/GeomMLBStadiums)
+- In general, consider quantiles of various “characteristics”
+- [Launch Angle and Exit Velo](https://baseballwithr.wordpress.com/2018/01/15/chance-of-hit-as-function-of-launch-angle-exit-velocity-and-spray-angle/)
+- [GeomMLBStadiums Package](https://github.com/bdilday/GeomMLBStadiums)

@@ -1,7 +1,7 @@
 # load packages necessary for setup
 library(tidyverse)
 
-# load {seam} package functions, some necessary for setup
+# load R functions, some necessary for setup
 devtools::load_all()
 
 # create data-raw directory if it does not exist
@@ -27,6 +27,7 @@ if (!file.exists("data/player-ids.Rds")) {
 }
 
 # process statcast data
+# TODO: split this up more
 if (!file.exists("data-raw/pitches-processed.csv")) {
 
   if (!exists("pitches") | !exists("player_ids")) {
@@ -62,3 +63,14 @@ if (!file.exists("data/mlb-teams.Rds") | !file.exists("data/stadiums.Rds")) {
   saveRDS(mlb_teams, "data/mlb-teams.Rds")
   saveRDS(stadiums, "data/stadiums.Rds")
 }
+
+
+
+saveRDS(GeomMLBStadiums::MLBStadiumsPathData, "data/stadium-paths.Rds")
+
+
+
+# TODO: check for all necessary file
+
+# run tests
+shiny::runTests()

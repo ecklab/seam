@@ -9,6 +9,7 @@ batter_pool = readRDS("data/batter-pool.Rds")
 pitcher_pool = readRDS("data/pitcher-pool.Rds")
 mlb_teams = readRDS("data/mlb-teams.Rds")
 stadiums = readRDS("data/stadiums.Rds")
+stadium_paths = readRDS("data/stadium-paths.Rds")
 
 shiny_seam_helper = function(b, p, br, pr, stadium = "generic") {
 
