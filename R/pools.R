@@ -162,8 +162,8 @@ make_bip_pool_synth_pitcher = function(.pitch_type, .batter, .pitcher, .bip, .pi
 
   # calculate similarity and weights for all potential donors
   p_pool_sims = calc_sim_pitcher(p_study_char = p_study_char,
-                                p_pool_char = p_pool_char,
-                                ratio = .ratio)
+                                 p_pool_char = p_pool_char,
+                                 ratio = .ratio)
 
   # append sims and weights to pool
   p_pool = dplyr::bind_cols(p_pool_char, p_pool_sims)
