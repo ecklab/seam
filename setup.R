@@ -37,7 +37,7 @@ if (!file.exists("data-raw/pitches-processed.csv")) {
   # process
   pitches_processed = process_statcast(data = pitches, player_ids = player_ids)
   bip = get_bip(pitches_processed)
-  b_lu = make_b_lu(pitches_processed)
+  b_lu = make_b_lu(bip)
   p_lu = make_p_lu(bip)
   batter_pool = get_batter_pool(bip = bip)
   pitcher_pool = get_pitcher_pool(bip = bip)
@@ -62,6 +62,3 @@ if (!file.exists("data/mlb-teams.Rds") | !file.exists("data/stadiums.Rds")) {
   saveRDS(mlb_teams, "data/mlb-teams.Rds")
   saveRDS(stadiums, "data/stadiums.Rds")
 }
-
-
-
