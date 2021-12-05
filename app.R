@@ -22,12 +22,12 @@ shiny_seam_helper = function(b, p, br, pr, stadium = "generic") {
     .ratio_pitcher = pr
   )
 
-  p1 = plot_df(seam$seam_df, stadium = stadium, batter = b, pitcher = p, main = "Full SEAM")
-  p2 = plot_df(seam$synth_pitcher_df, stadium = stadium, batter = b, pitcher = p, main = "Synthetic Pitcher")
-  p3 = plot_df(seam$synth_batter_df, stadium = stadium, batter = b, pitcher = p, main = "Synthetic Batter")
-  p4 = plot_df(seam$empirical_df, stadium = stadium, batter = b, pitcher = p, main = "Empirical Matchup")
-  p5 = plot_df(seam$empirical_pitcher_df, stadium = stadium, batter = b, pitcher = p, main = "Empirical Pitcher")
-  p6 = plot_df(seam$empirical_batter_df, stadium = stadium, batter = b, pitcher = p, main = "Empirical Batter")
+  p1 = plot_df(seam$seam_df, stadium = stadium, main = "Full SEAM")
+  p2 = plot_df(seam$synth_pitcher_df, stadium = stadium, main = "Synthetic Pitcher")
+  p3 = plot_df(seam$synth_batter_df, stadium = stadium, main = "Synthetic Batter")
+  p4 = plot_df(seam$empirical_df, stadium = stadium, main = "Empirical Matchup")
+  p5 = plot_df(seam$empirical_pitcher_df, stadium = stadium, main = "Empirical Pitcher")
+  p6 = plot_df(seam$empirical_batter_df, stadium = stadium, main = "Empirical Batter")
 
   list(p1 = p1, p2 = p2, p3 = p3, p4 = p4, p5 = p5, p6 = p6)
 
