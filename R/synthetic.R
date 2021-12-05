@@ -19,9 +19,14 @@ do_full_seam_matchup = function(.batter, .pitcher, .bip, .batter_pool, .pitcher_
                                       .batter = .batter,
                                       .p_throws = hands[["p_throws"]])
 
-  if(nrow(batter_pitches) < 1) {
-    stop("Batter does not have any balls in play against the handedness of the selected pitcher.")
+  print(pitcher_pitches)
+  print(batter_pitches)
+
+  if (sum(batter_pitches$n) <= 1) {
+    status = "Not enough batter pitches."
   }
+
+  pt_int = all(pitcher_pitches$pitch_type %in% batter_pitches$pitch_type)
 
   # vs all #####################################################################
 
@@ -73,76 +78,124 @@ do_full_seam_matchup = function(.batter, .pitcher, .bip, .batter_pool, .pitcher_
 
   # synth batter ###############################################################
 
-  synth_batter_pools = lapply(
-    pitcher_pitches$pitch_type,
-    make_bip_pool_synth_batter,
-    .batter = .batter,
-    .pitcher = .pitcher,
-    .bip = .bip,
-    .batter_pool = .batter_pool,
-    .stand = hands["b_stands"],
-    .p_throws = hands["p_throws"],
-    .ratio = .ratio_batter
-  )
+  synth_batter_df = empirical_pitcher_df
+  n_b = nrow(empirical_batter_pool)
 
-  # print(pitcher_pitches)
-  # print(synth_batter_pools)
+  if (pt_int) {
 
-  n_b = sum(sapply(synth_batter_pools, calc_n_synth))
+    synth_batter_pools = lapply(
+      pitcher_pitches$pitch_type,
+      make_bip_pool_synth_batter,
+      .batter = .batter,
+      .pitcher = .pitcher,
+      .bip = .bip,
+      .batter_pool = .batter_pool,
+      .stand = hands["b_stands"],
+      .p_throws = hands["p_throws"],
+      .ratio = .ratio_batter
+    )
 
-  synth_batter_z = lapply(synth_batter_pools, kde_helper) %>%
-    lapply(kde_to_df) %>%
-    lapply(kde_z_extractor) %>%
-    unlist() %>%
-    matrix(ncol = length(synth_batter_pools)) %*%
-    pitcher_pitches$freq_pitches %>%
-    as.vector()
+    # print(pitcher_pitches)
+    # print(synth_batter_pools)
 
-  synth_batter_df = empirical_df
-  synth_batter_df$z = synth_batter_z
+    n_b = sum(sapply(synth_batter_pools, calc_n_synth))
+
+    synth_batter_z = lapply(synth_batter_pools, kde_helper) %>%
+      lapply(kde_to_df) %>%
+      lapply(kde_z_extractor) %>%
+      unlist() %>%
+      matrix(ncol = length(synth_batter_pools)) %*%
+      pitcher_pitches$freq_pitches %>%
+      as.vector()
+
+    synth_batter_df$z = synth_batter_z
+
+  }
 
   # synth pitcher ##############################################################
 
-  synth_pitcher_pools = lapply(
-    pitcher_pitches$pitch_type,
-    make_bip_pool_synth_pitcher,
-    .batter = .batter,
-    .pitcher = .pitcher,
-    .bip = .bip,
-    .pitcher_pool = .pitcher_pool,
-    .stand = hands["b_stands"],
-    .p_throws = hands["p_throws"],
-    .ratio = .ratio_pitcher
-  )
+  synth_pitcher_df = empirical_batter_df
+  n_p = nrow(empirical_pitcher_pool)
 
-  # print(batter_pitches)
-  # print(synth_pitcher_pools)
+  if (pt_int) {
 
-  n_p = sum(sapply(synth_pitcher_pools, calc_n_synth))
+    synth_pitcher_pools = lapply(
+      pitcher_pitches$pitch_type,
+      make_bip_pool_synth_pitcher,
+      .batter = .batter,
+      .pitcher = .pitcher,
+      .bip = .bip,
+      .pitcher_pool = .pitcher_pool,
+      .stand = hands["b_stands"],
+      .p_throws = hands["p_throws"],
+      .ratio = .ratio_pitcher
+    )
 
-  synth_pitcher_z = lapply(synth_pitcher_pools, kde_helper) %>%
-    lapply(kde_to_df) %>%
-    lapply(kde_z_extractor) %>%
-    unlist() %>%
-    matrix(ncol = length(synth_pitcher_pools)) %*%
-    pitcher_pitches$freq_pitches %>%
-    as.vector()
+    # print(batter_pitches)
+    # print(synth_pitcher_pools)
 
-  synth_pitcher_df = empirical_df
-  synth_pitcher_df$z = synth_pitcher_z
+    n_p = sum(sapply(synth_pitcher_pools, calc_n_synth))
+
+    synth_pitcher_z = lapply(synth_pitcher_pools, kde_helper) %>%
+      lapply(kde_to_df) %>%
+      lapply(kde_z_extractor) %>%
+      unlist() %>%
+      matrix(ncol = length(synth_pitcher_pools)) %*%
+      pitcher_pitches$freq_pitches %>%
+      as.vector()
+
+    # synth_pitcher_z2 = synth_pitcher_z
+    #
+    # re_weight = function(df, prop) {
+    #   df$weight = df$weight * prop
+    #   df
+    # }
+    #
+    # synth_pitcher_pools = purrr::map2(synth_pitcher_pools,
+    #                                   pitcher_pitches$freq_pitches,
+    #                                   re_weight)
+    #
+    # synth_pitcher_pools = dplyr::bind_rows(synth_pitcher_pools)
+    #
+    # synth_pitcher_z = kde_helper(synth_pitcher_pools) %>%
+    #     kde_to_df %>%
+    #     kde_z_extractor
+    #
+    # print(data.frame(synth_pitcher_z, synth_pitcher_z2))
+
+    # plot(synth_pitcher_z, synth_pitcher_z2)
+    # abline(a = 0, b = 1, col = "dodgerblue")
+    # grid()
+
+    # print(c(sum(synth_pitcher_z * 7.040098), sum(synth_pitcher_z2 * 7.040098)))
+
+    synth_pitcher_df$z = synth_pitcher_z
+
+  }
 
   # combine ####################################################################
+
+  print(c(n = n, n_b = n_b, n_p = n_p))
+
+  # TODO: uh, really need to check on this!!!
+  if (!pt_int) {
+    temp = n_p
+    n_p = n_b
+    n_b = temp
+  }
 
   lambda = sqrt(n) / (sqrt(n) + sqrt(n_p) + sqrt(n_b))
   lambda_p = sqrt(n_p) / (sqrt(n) + sqrt(n_p) + sqrt(n_b))
   lambda_b = sqrt(n_b) / (sqrt(n) + sqrt(n_p) + sqrt(n_b))
 
+  print(c(lambda = lambda, lambda_p = lambda_p, lambda_b = lambda_b))
+
   seam_df = empirical_df
 
   seam_df$z =
     lambda * empirical_df$z +
-    lambda_b * synth_batter_z +
-    lambda_p * synth_pitcher_z
+    lambda_b * synth_batter_df$z +
+    lambda_p * synth_pitcher_df$z
 
   # return #####################################################################
 

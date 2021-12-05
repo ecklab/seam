@@ -21,7 +21,6 @@ mlbam_xy_transformation = function (data, x = "hc_x", y = "hc_y", column_suffix 
   data
 }
 
-#' @export
 plot_df = function(df, stadium = "generic", main) {
 
   # TODO: mirror this and the validate code
