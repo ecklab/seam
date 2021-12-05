@@ -117,6 +117,7 @@ get_bip = function(statcast_pitches) {
     dplyr::filter(!is.na(.data$launch_angle)) %>%
     dplyr::filter(!is.na(.data$launch_speed)) %>%
     dplyr::filter(!is.na(.data$pitch_type)) %>%
+    dplyr::filter(.data$pitch_type != "") %>%
     dplyr::filter(.data$pitch_type != "KN") %>%
     dplyr::filter(.data$pitch_type != "EP") %>%
     dplyr::filter(.data$pitch_type != "SC") %>%
@@ -133,7 +134,7 @@ get_bip = function(statcast_pitches) {
                   "release_pos_z", "events", "stand", "p_throws", "pfx_x",
                   "pfx_z", "hc_x", "hc_y", "vx0", "vy0", "vz0", "ax", "ay",
                   "az", "launch_speed", "launch_angle", "effective_speed",
-                  "release_spin_rate", "release_extension") %>%
+                  "release_spin_rate", "release_extension", "team") %>%
     dplyr::filter(!is.na(.data$effective_speed)) %>%
     dplyr::mutate(effective_speed = as.numeric(.data$effective_speed)) %>%
     dplyr::filter(!is.na(.data$release_spin_rate)) %>%
