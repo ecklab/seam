@@ -22,7 +22,7 @@ mlbam_xy_transformation = function (data, x = "hc_x", y = "hc_y", column_suffix 
 }
 
 #' @export
-plot_df = function(df, stadium = "generic", pitcher, batter, main) {
+plot_df = function(df, stadium = "generic", main) {
 
   # TODO: mirror this and the validate code
   x_diff = (150 + 150) / 99
