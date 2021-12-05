@@ -1,4 +1,6 @@
 library(testthat)
-library(seam)
-
-test_check("seam")
+test_dir(
+  "./testthat",
+  env = shiny::loadSupport(),
+  reporter = c("progress", "fail")
+)
