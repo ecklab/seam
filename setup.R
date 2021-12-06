@@ -1,5 +1,15 @@
+# TODO: add package installation information
+if (!require("remotes")) {
+  install.packages("remotes")
+}
+remotes::install_deps()
+
+if (!requie(GeomMLBStadiums)) {
+  remotes::install_github("bdilday/GeomMLBStadiums")
+}
+
 # load packages necessary for setup
-library(tidyverse)
+library("dplyr")
 
 # load R functions, some necessary for setup
 devtools::load_all()
@@ -54,6 +64,7 @@ if (!file.exists("data-raw/pitches-processed.csv")) {
 }
 
 # get team and stadium information
+# TODO: really no reason to rely on outside data here
 if (!file.exists("data/mlb-teams.Rds") | !file.exists("data/stadiums.Rds")) {
   mlb_teams = readRDS(url("https://github.com/danmorse314/dinger-machine/raw/main/data/mlb_logos.rds"))
   mlb_teams = mlb_teams %>%
@@ -64,13 +75,28 @@ if (!file.exists("data/mlb-teams.Rds") | !file.exists("data/stadiums.Rds")) {
   saveRDS(stadiums, "data/stadiums.Rds")
 }
 
+# get stadium dimensions
+if (!file.exists("data/stadium-paths.Rds") {
+  saveRDS(GeomMLBStadiums::MLBStadiumsPathData, "data/stadium-paths.Rds")
+}
 
+required_files = c(
+  "data/b-lu.Rds",
+  "data/batter-pool.Rds",
+  "data/bip.Rds",
+  "data/mlb-teams.Rds",
+  "data/p-lu.Rds",
+  "data/pitcher-pool.Rds",
+  "data/player-ids.Rds",
+  "data/stadium-paths.Rds",
+  "data/stadiums.Rds"
+)
 
-saveRDS(GeomMLBStadiums::MLBStadiumsPathData, "data/stadium-paths.Rds")
-
-
-
-# TODO: check for all necessary file
+if (all(sapply(required_files, file.exists))) {
+  message("All required files exist.")
+} else {
+  warnings("Some required files are missing.")
+}
 
 # run tests
 shiny::runTests()
