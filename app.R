@@ -3,8 +3,8 @@ library("ggplot2", quietly = TRUE, warn.conflicts = FALSE)
 library("dplyr", quietly = TRUE, warn.conflicts = FALSE)
 
 bip = readRDS("data/bip.Rds")
-b_lu = readRDS("data/b-lu.Rds")
-p_lu = readRDS("data/p-lu.Rds")
+b_lu = as.data.frame(readRDS("data/b-lu.Rds")) # why does this break as a tibble....??
+p_lu = as.data.frame(readRDS("data/p-lu.Rds")) # why does this break as a tibble....??
 batter_pool = readRDS("data/batter-pool.Rds")
 pitcher_pool = readRDS("data/pitcher-pool.Rds")
 mlb_teams = readRDS("data/mlb-teams.Rds")
@@ -39,10 +39,10 @@ ui = fluidPage(
   theme = bslib::bs_theme(bootswatch = "united", primary = "#31a354"),
   sidebarLayout(
     sidebarPanel(
-      selectInput("pitcher", label = "Pitcher", choices = sort(unique(p_lu$pitcher_name)), selected = "Justin Verlander"),
+      selectInput("pitcher", label = "Pitcher", choices = unique(p_lu$pitcher_name), selected = "Justin Verlander"),
       sliderInput("p_ratio", "Ratio of Stuff to Release", min = .50, max = 1, value = .85, step = .01),
       hr(),
-      selectInput("batter", label = "Batter", choices = sort(unique(b_lu$batter_name)), selected = "Mike Trout"),
+      selectInput("batter", label = "Batter", choices = unique(b_lu$batter_name), selected = "Mike Trout"),
       sliderInput("b_ratio", "Ratio of LA/EV to Batted Ball Location", min = 0, max = 1, value = .85, step = .01),
       hr(),
       selectInput("stadium", label = "Stadium", choices = stadiums, selected = "angels"),

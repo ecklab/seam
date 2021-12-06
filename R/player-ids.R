@@ -34,12 +34,20 @@ make_p_lu = function(.bip) {
   .bip %>%
     dplyr::mutate(pitcher_name = paste(.data$pitcher_first, .data$pitcher_last)) %>%
     dplyr::select(.data$pitcher_name, .data$pitcher) %>%
+    dplyr::group_by(.data$pitcher_name, .data$pitcher) %>%
+    dplyr::summarise(n = n()) %>%
+    dplyr::arrange(desc(n)) %>%
+    dplyr::select(.data$pitcher_name, .data$pitcher) %>%
     dplyr::distinct()
 }
 
 make_b_lu = function(.bip) {
   .bip %>%
     dplyr::mutate(batter_name = paste(.data$batter_first, .data$batter_last)) %>%
+    dplyr::select(.data$batter_name, .data$batter, .data$team) %>%
+    dplyr::group_by(.data$batter_name, .data$batter, .data$team) %>%
+    dplyr::summarise(n = n()) %>%
+    dplyr::arrange(desc(n)) %>%
     dplyr::select(.data$batter_name, .data$batter, .data$team) %>%
     dplyr::distinct()
 }
