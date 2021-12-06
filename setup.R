@@ -95,7 +95,7 @@ required_files = c(
 if (all(sapply(required_files, file.exists))) {
   message("All required files exist.")
 } else {
-  warnings("Some required files are missing.")
+  warning("Some required files are missing. Consider deleting data-raw/pitches-processed.csv if it exists. Then re-run setup.R.")
 }
 
 # run tests
