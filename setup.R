@@ -4,7 +4,7 @@ if (!require("remotes")) {
 }
 remotes::install_deps()
 
-if (!requie(GeomMLBStadiums)) {
+if (!require(GeomMLBStadiums)) {
   remotes::install_github("bdilday/GeomMLBStadiums")
 }
 
