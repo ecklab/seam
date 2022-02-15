@@ -22,6 +22,8 @@ do_full_seam_matchup = function(.batter, .pitcher, .bip, .batter_pool, .pitcher_
   # print(pitcher_pitches)
   # print(batter_pitches)
 
+  print("THIS SHOULD ONLY PRINT ONCE")
+
   if (sum(batter_pitches$n) <= 1) {
     status = "Not enough batter pitches."
   }
