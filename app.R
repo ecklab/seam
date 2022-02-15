@@ -65,7 +65,6 @@ server = function(input, output, session) {
                       selected = get_batter_stadium(.b_lu = b_lu,
                                                     teams = mlb_teams,
                                                     .batter = input$batter))
-
   })
 
   matchup = reactive({
