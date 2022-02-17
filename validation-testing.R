@@ -9,21 +9,21 @@ p_lu = as.data.frame(readRDS("data/p-lu.Rds")) # why does this break as a tibble
 batter_pool = get_batter_pool(bip = bip, year_start = 2017, year_end = 2020)
 pitcher_pool = get_pitcher_pool(bip = bip, year_start = 2017, year_end = 2020)
 
-validate_all = function(alpha = 0.25) {
+validate_all = function(alpha = c(0.10, 0.25, 0.50, 0.75, 0.90)) {
 
   trn = bip %>%
     filter(game_year <= 2020)
   tst = bip %>%
     filter(game_year > 2020)
 
-  in_hdr = matrix(NA, nrow = nrow(tst), ncol = 3)
+  in_hdr = array(NA, c(nrow(tst), 3, length(alpha)))
 
   for (i in 1:nrow(tst)) {
 
     batter = tst[i, ]$batter
     pitcher = tst[i, ]$pitcher
 
-    in_hdr[i, ] = try({
+    try({
 
       seam = suppressMessages(do_full_seam_matchup(
         .batter = batter,
@@ -35,45 +35,43 @@ validate_all = function(alpha = 0.25) {
         .ratio_pitcher = .85
       ))
 
-      c(
-        check_in_hdrs(
-          alpha = alpha,
-          pitch = tst[i, c("x", "y")],
-          synthetic = seam$seam_df,
-          plot = FALSE
-        ),
-
-        check_in_hdrs(
-          alpha = alpha,
-          pitch = tst[i, c("x", "y")],
-          synthetic = seam$empirical_pitcher_df,
-          plot = FALSE
-        ),
-
-        check_in_hdrs(
-          alpha = alpha,
-          pitch = tst[i, c("x", "y")],
-          synthetic = seam$empirical_batter_df,
-          plot = FALSE
+      for (k in seq_along(alpha)) {
+        in_hdr[i, , k] = c(
+          check_in_hdrs(
+            alpha = alpha[k],
+            pitch = tst[i, c("x", "y")],
+            synthetic = seam$seam_df,
+            plot = FALSE
+          ),
+          check_in_hdrs(
+            alpha = alpha[k],
+            pitch = tst[i, c("x", "y")],
+            synthetic = seam$empirical_pitcher_df,
+            plot = FALSE
+          ),
+          check_in_hdrs(
+            alpha = alpha[k],
+            pitch = tst[i, c("x", "y")],
+            synthetic = seam$empirical_batter_df,
+            plot = FALSE
+          )
         )
-      )
+        # print(in_hdr[i, , k])
+      }
+
     })
 
-    if (i %% 100 == 0) {
-      a1 = sum(in_hdr[1:i, 1] == "TRUE")
-      b1 = sum(in_hdr[1:i, 1] == "FALSE")
-
-      a2 = sum(in_hdr[1:i, 2] == "TRUE")
-      b2 = sum(in_hdr[1:i, 2] == "FALSE")
-
-      a3 = sum(in_hdr[1:i, 3] == "TRUE")
-      b3 = sum(in_hdr[1:i, 3] == "FALSE")
-
-      print(c(
-        seam = a1 / (a1 + b1),
-        batter = a2 / (a2 + b2),
-        pitcher = a3 / (a3 + b3)
-      ))
+    if (i %% 5 == 0) {
+      mat = rbind(
+        colMeans(in_hdr[, , 1], na.rm = TRUE),
+        colMeans(in_hdr[, , 2], na.rm = TRUE),
+        colMeans(in_hdr[, , 3], na.rm = TRUE),
+        colMeans(in_hdr[, , 4], na.rm = TRUE),
+        colMeans(in_hdr[, , 5], na.rm = TRUE)
+      )
+      rownames(mat) = alpha
+      colnames(mat) = c("seam", "batter", "pitcher")
+      print(mat)
     }
 
   }
