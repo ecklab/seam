@@ -4,10 +4,12 @@ devtools::load_all()
 bip = readRDS("data/bip.Rds")
 b_lu = as.data.frame(readRDS("data/b-lu.Rds")) # why does this break as a tibble....??
 p_lu = as.data.frame(readRDS("data/p-lu.Rds")) # why does this break as a tibble....??
-batter_pool = readRDS("data/batter-pool.Rds")
-pitcher_pool = readRDS("data/pitcher-pool.Rds")
 
-validate_all = function() {
+# modify pools for validation
+batter_pool = get_batter_pool(bip = bip, year_start = 2017, year_end = 2020)
+pitcher_pool = get_pitcher_pool(bip = bip, year_start = 2017, year_end = 2020)
+
+validate_all = function(alpha = 0.25) {
 
   trn = bip %>%
     filter(game_year <= 2020)
@@ -23,10 +25,6 @@ validate_all = function() {
 
     in_hdr[i, ] = try({
 
-      #
-      # TODO TODO
-      # make sure batter pools only contain the correct years
-      #
       seam = do_full_seam_matchup(
         .batter = batter,
         .pitcher = pitcher,
@@ -39,21 +37,21 @@ validate_all = function() {
 
       c(
         check_in_hdrs(
-          alpha = 0.25,
+          alpha = alpha,
           pitch = tst[i, c("x", "y")],
           synthetic = seam$seam_df,
           plot = FALSE
         ),
 
         check_in_hdrs(
-          alpha = 0.25,
+          alpha = alpha,
           pitch = tst[i, c("x", "y")],
           synthetic = seam$empirical_pitcher_df,
           plot = FALSE
         ),
 
         check_in_hdrs(
-          alpha = 0.25,
+          alpha = alpha,
           pitch = tst[i, c("x", "y")],
           synthetic = seam$empirical_batter_df,
           plot = FALSE
@@ -71,9 +69,9 @@ validate_all = function() {
     b3 = sum(in_hdr[1:i, 3] == "FALSE")
 
     print(c(
-      a1 / (a1 + b1),
-      a2 / (a2 + b2),
-      a3 / (a3 + b3)
+      seam = a1 / (a1 + b1),
+      batter = a2 / (a2 + b2),
+      pitcher = a3 / (a3 + b3)
     ))
   }
 
@@ -82,7 +80,3 @@ validate_all = function() {
 }
 
 results = validate_all()
-
-
-
-
