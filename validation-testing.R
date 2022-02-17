@@ -25,7 +25,7 @@ validate_all = function(alpha = 0.25) {
 
     in_hdr[i, ] = try({
 
-      seam = do_full_seam_matchup(
+      seam = suppressMessages(do_full_seam_matchup(
         .batter = batter,
         .pitcher = pitcher,
         .bip = trn,
@@ -33,7 +33,7 @@ validate_all = function(alpha = 0.25) {
         .pitcher_pool = pitcher_pool,
         .ratio_batter = .85,
         .ratio_pitcher = .85
-      )
+      ))
 
       c(
         check_in_hdrs(
@@ -59,20 +59,23 @@ validate_all = function(alpha = 0.25) {
       )
     })
 
-    a1 = sum(in_hdr[1:i, 1] == "TRUE")
-    b1 = sum(in_hdr[1:i, 1] == "FALSE")
+    if (i %% 100 == 0) {
+      a1 = sum(in_hdr[1:i, 1] == "TRUE")
+      b1 = sum(in_hdr[1:i, 1] == "FALSE")
 
-    a2 = sum(in_hdr[1:i, 2] == "TRUE")
-    b2 = sum(in_hdr[1:i, 2] == "FALSE")
+      a2 = sum(in_hdr[1:i, 2] == "TRUE")
+      b2 = sum(in_hdr[1:i, 2] == "FALSE")
 
-    a3 = sum(in_hdr[1:i, 3] == "TRUE")
-    b3 = sum(in_hdr[1:i, 3] == "FALSE")
+      a3 = sum(in_hdr[1:i, 3] == "TRUE")
+      b3 = sum(in_hdr[1:i, 3] == "FALSE")
 
-    print(c(
-      seam = a1 / (a1 + b1),
-      batter = a2 / (a2 + b2),
-      pitcher = a3 / (a3 + b3)
-    ))
+      print(c(
+        seam = a1 / (a1 + b1),
+        batter = a2 / (a2 + b2),
+        pitcher = a3 / (a3 + b3)
+      ))
+    }
+
   }
 
   in_hdr
