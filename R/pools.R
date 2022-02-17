@@ -3,7 +3,11 @@ scale_this = function(x) {
 }
 
 # this should happen before the seam app
-get_batter_pool = function(bip) {
+get_batter_pool = function(bip, year_start = 2017, year_end = 2021) {
+
+  bip = bip %>%
+    filter(.data$game_year >= year_start) %>%
+    filter(.data$game_year <= year_end)
 
   # batter pool by "year"
   batter_pool_year = bip %>%
@@ -17,8 +21,6 @@ get_batter_pool = function(bip) {
 
   # batter pool "overall"
   batter_pool_all = bip %>%
-    # dplyr::filter(.data$game_year >= 2018) %>%
-    # dplyr::filter(.data$game_year <= 2020) %>%
     dplyr::group_by(.data$batter, .data$pitch_type, .data$stand) %>%
     dplyr::summarise(lf_prc = mean(.data$spray_angle < -15),
                      cf_prc = mean(.data$spray_angle >= -15 & .data$spray_angle <= 15),
@@ -86,7 +88,11 @@ make_bip_pool_synth_batter = function(.pitch_type, .batter, .pitcher, .bip, .bat
 }
 
 # this should happen before the seam app
-get_pitcher_pool = function(bip) {
+get_pitcher_pool = function(bip, year_start = 2017, year_end = 2021) {
+
+  bip = bip %>%
+    filter(.data$game_year >= year_start) %>%
+    filter(.data$game_year <= year_end)
 
   # pitcher pool by "year"
   pitcher_pool_year = bip %>%
@@ -102,8 +108,6 @@ get_pitcher_pool = function(bip) {
 
   # pitcher pool "overall"
   pitcher_pool_all = bip %>%
-    # dplyr::filter(.data$game_year >= 2018) %>%
-    # dplyr::filter(.data$game_year <= 2020) %>%
     dplyr::group_by(.data$pitcher, .data$pitch_type, .data$p_throws) %>%
     dplyr::summarise(release_speed = mean(.data$release_speed),
                      release_spin_rate = mean(.data$release_spin_rate),
