@@ -9,12 +9,28 @@ p_lu = as.data.frame(readRDS("data/p-lu.Rds")) # why does this break as a tibble
 batter_pool = get_batter_pool(bip = bip, year_start = 2017, year_end = 2020)
 pitcher_pool = get_pitcher_pool(bip = bip, year_start = 2017, year_end = 2020)
 
-validate_all = function(alpha = c(0.10, 0.25, 0.50, 0.75, 0.90)) {
+trn = bip %>%
+  filter(game_year <= 2020)
 
-  trn = bip %>%
-    filter(game_year <= 2020)
-  tst = bip %>%
-    filter(game_year > 2020)
+trn_b = trn %>%
+  group_by(batter) %>%
+  summarize(n = n()) %>%
+  filter(n > 5) %>%
+  pull(batter)
+
+trn_p = trn %>%
+  group_by(pitcher) %>%
+  summarize(n = n()) %>%
+  filter(n > 5) %>%
+  pull(pitcher)
+
+tst = bip %>%
+  filter(game_year > 2020) %>%
+  filter(batter %in% trn_b) %>%
+  filter(pitcher %in% trn_p)
+
+
+validate_all = function(alpha = c(0.10, 0.25, 0.50, 0.75, 0.90)) {
 
   in_hdr = array(NA, c(nrow(tst), 3, length(alpha)))
 
@@ -23,9 +39,12 @@ validate_all = function(alpha = c(0.10, 0.25, 0.50, 0.75, 0.90)) {
     batter = tst[i, ]$batter
     pitcher = tst[i, ]$pitcher
 
+    # output matchups to find which causes warnings / error
+    # print(c(batter = batter, pitcher = pitcher))
+
     try({
 
-      seam = suppressMessages(do_full_seam_matchup(
+      seam = do_full_seam_matchup(
         .batter = batter,
         .pitcher = pitcher,
         .bip = trn,
@@ -33,7 +52,7 @@ validate_all = function(alpha = c(0.10, 0.25, 0.50, 0.75, 0.90)) {
         .pitcher_pool = pitcher_pool,
         .ratio_batter = .85,
         .ratio_pitcher = .85
-      ))
+      )
 
       for (k in seq_along(alpha)) {
         in_hdr[i, , k] = c(
@@ -56,12 +75,12 @@ validate_all = function(alpha = c(0.10, 0.25, 0.50, 0.75, 0.90)) {
             plot = FALSE
           )
         )
-        # print(in_hdr[i, , k])
       }
 
     })
 
-    if (i %% 5 == 0) {
+    if (i %% 100 == 0) {
+      print(i)
       mat = rbind(
         colMeans(in_hdr[, , 1], na.rm = TRUE),
         colMeans(in_hdr[, , 2], na.rm = TRUE),
