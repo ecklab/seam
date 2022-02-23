@@ -186,7 +186,10 @@ make_empirical_pool = function(.batter = NULL, .pitcher = NULL, .bip, type) {
     stop("both batter and pitcher must be specified")
   }
 
-  hands = get_matchup_hands(bip = .bip, b_id = .batter, p_id = .pitcher)
+  # temporary suppression of message that is duplicated (add args to pass handedness and avoid?)
+  hands = suppressMessages(
+    get_matchup_hands(bip = .bip, b_id = .batter, p_id = .pitcher)
+  )
 
   if (type == "batter") {
     pool = .bip %>%
