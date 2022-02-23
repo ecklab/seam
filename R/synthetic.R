@@ -23,6 +23,7 @@ do_full_seam_matchup = function(.batter, .pitcher, .bip, .batter_pool, .pitcher_
   # print(batter_pitches)
 
   # TODO: find where in the app this happens???
+  # TODO: confirmed this only happens in the app, not internal functions
   # print("THIS SHOULD ONLY PRINT ONCE")
 
   if (sum(batter_pitches$n) <= 1) {
