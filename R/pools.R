@@ -67,11 +67,10 @@ make_bip_pool_synth_batter = function(.pitch_type, .batter, .pitcher, .bip, .bat
 
   # potential donor batters
   b_pool_char = .batter_pool %>%
+    dplyr::filter(.data$batter %in% unique(p_bip$batter)) %>% # THIS MIGHT BE "CORRECT" BUT EFFECT OTHER CALCULATIONS!!!!
     dplyr::filter(.data$pitch_type == .pitch_type) %>%
     dplyr::filter(.data$stand == .stand) %>%
-    dplyr::filter(.data$game_year != 0) %>%
-    dplyr::filter(.data$batter != .batter) %>%
-    dplyr::filter(.data$batter %in% unique(p_bip$batter)) # THIS MIGHT BE "CORRECT" BUT EFFECT OTHER CALCULATIONS!!!!
+    dplyr::filter(.data$game_year != 0)
 
   # calculate similarity and weights for all potential donors
   b_pool_sims = calc_sim_batter(b_study_char = b_study_char,
@@ -158,11 +157,10 @@ make_bip_pool_synth_pitcher = function(.pitch_type, .batter, .pitcher, .bip, .pi
 
   # potential donor pitchers
   p_pool_char = .pitcher_pool %>%
+    dplyr::filter(.data$pitcher %in% unique(b_bip$pitcher)) %>%  # THIS MIGHT BE "CORRECT" BUT EFFECT OTHER CALCULATIONS!!!!
     dplyr::filter(.data$pitch_type == .pitch_type) %>%
     dplyr::filter(.data$p_throws == .p_throws) %>%
-    dplyr::filter(.data$game_year != 0) %>%
-    dplyr::filter(.data$pitcher != .pitcher) %>%
-    dplyr::filter(.data$pitcher %in% unique(b_bip$pitcher)) # THIS MIGHT BE "CORRECT" BUT EFFECT OTHER CALCULATIONS!!!!
+    dplyr::filter(.data$game_year != 0)
 
   # calculate similarity and weights for all potential donors
   p_pool_sims = calc_sim_pitcher(p_study_char = p_study_char,
@@ -177,6 +175,7 @@ make_bip_pool_synth_pitcher = function(.pitch_type, .batter, .pitcher, .bip, .pi
     dplyr::select(.data$x, .data$y, .data$similarity, .data$weight)
 
 }
+
 
 # this will be done in the seam app
 # need to consider handedness
