@@ -3,8 +3,8 @@ library("ggplot2", quietly = TRUE, warn.conflicts = FALSE)
 library("dplyr", quietly = TRUE, warn.conflicts = FALSE)
 
 bip = readRDS("data/bip.Rds")
-b_lu = as.data.frame(readRDS("data/b-lu.Rds")) # why does this break as a tibble....??
-p_lu = as.data.frame(readRDS("data/p-lu.Rds")) # why does this break as a tibble....??
+b_lu = data.frame(readRDS("data/b-lu.Rds")) # why is this so much faster as a data frame
+p_lu = data.frame(readRDS("data/p-lu.Rds")) # why is this so much faster as a data frame
 batter_pool = readRDS("data/batter-pool.Rds")
 pitcher_pool = readRDS("data/pitcher-pool.Rds")
 mlb_teams = readRDS("data/mlb-teams.Rds")
