@@ -38,7 +38,8 @@ do_full_seam_matchup = function(.batter, .pitcher, .bip, .batter_pool, .pitcher_
     .batter = .batter,
     .pitcher = .pitcher,
     .bip = .bip,
-    type = "pitcher"
+    type = "pitcher",
+    hands = hands
   )
 
   empirical_pitcher_df = empirical_pitcher_pool %>%
@@ -49,7 +50,8 @@ do_full_seam_matchup = function(.batter, .pitcher, .bip, .batter_pool, .pitcher_
     .batter = .batter,
     .pitcher = .pitcher,
     .bip = .bip,
-    type = "batter"
+    type = "batter",
+    hands = hands
   )
 
   empirical_batter_df = empirical_batter_pool %>%
@@ -62,7 +64,8 @@ do_full_seam_matchup = function(.batter, .pitcher, .bip, .batter_pool, .pitcher_
     .batter = .batter,
     .pitcher = .pitcher,
     .bip = .bip,
-    type = "both"
+    type = "both",
+    hands = hands
   )
 
   n = nrow(empirical_pool)

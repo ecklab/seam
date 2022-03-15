@@ -176,19 +176,7 @@ make_bip_pool_synth_pitcher = function(.pitch_type, .batter, .pitcher, .bip, .pi
 
 }
 
-
-# this will be done in the seam app
-# need to consider handedness
-make_empirical_pool = function(.batter = NULL, .pitcher = NULL, .bip, type) {
-
-  if (is.null(.batter) | is.null(.pitcher)) {
-    stop("both batter and pitcher must be specified")
-  }
-
-  # temporary suppression of message that is duplicated (add args to pass handedness and avoid?)
-  hands = suppressMessages(
-    get_matchup_hands(bip = .bip, b_id = .batter, p_id = .pitcher)
-  )
+make_empirical_pool = function(.batter, .pitcher, .bip, type, hands) {
 
   if (type == "batter") {
     pool = .bip %>%
