@@ -17,7 +17,7 @@ test_that("kde() function with weights of 1 is equivalent to the MASS::kde2d() f
                MASS::kde2d(x = x, y = y, n = formals(kde)$n, lims = eval(formals(kde)$lims)))
 })
 
-test_that("kde() function with weights is equivalent to the ggtern::kde2d.weighted() function", {
-  expect_equal(kde(x = x, y = y, w = w),
-               ggtern::kde2d.weighted(x = x, y = y, w = w, n = formals(kde)$n, lims = eval(formals(kde)$lims)))
-})
+# test_that("kde() function with weights is equivalent to the ggtern::kde2d.weighted() function", {
+#   expect_equal(kde(x = x, y = y, w = w),
+#                ggtern::kde2d.weighted(x = x, y = y, w = w, n = formals(kde)$n, lims = eval(formals(kde)$lims)))
+# })
