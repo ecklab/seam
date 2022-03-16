@@ -25,6 +25,22 @@ mlbam_xy_transformation = function (data, x = "hc_x", y = "hc_y", column_suffix 
 
 plot_df = function(df, stadium = "generic", main) {
 
+  if (nrow(df) == 0) {
+    p = ggplot2::ggplot(df, ggplot2::aes(x = x, y = y, z = z)) +
+      ggplot2::xlim(-150, 150) +
+      ggplot2::ylim(-40, 200) +
+      ggplot2::scale_fill_brewer(palette = "Greens") +
+      ggplot2::theme_void() +
+      ggplot2::coord_fixed() +
+      ggplot2::theme(legend.position = "none",
+                     plot.caption = ggplot2::element_text(hjust = 0.5, size = 12),
+                     plot.margin = ggplot2::margin(t = -10, r = -50, b = 25, l = -50)
+      ) +
+      ggplot2::labs(caption = main) +
+      geom_mlb_stadium(stadium_ids = stadium)
+    return(p)
+  }
+
   # TODO: mirror this and the validate code
   # TODO: extract function to use for both
   x_diff = (150 + 150) / 99
@@ -44,7 +60,7 @@ plot_df = function(df, stadium = "generic", main) {
 
   z_breaks = c(sapply(seq(0.10, 0.90, by = 0.10), find_cut, df = df), max(df$z) + 0.01)
 
-  ggplot2::ggplot(df, ggplot2::aes(x = df$x, y = df$y, z = df$z)) +
+  ggplot2::ggplot(df, ggplot2::aes(x = x, y = y, z = z)) +
     ggplot2::geom_contour_filled(breaks = z_breaks) +
     ggplot2::xlim(-150, 150) +
     ggplot2::ylim(-40, 200) +
