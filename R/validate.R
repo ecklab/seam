@@ -19,15 +19,18 @@ check_in_hdrs = function(alpha, pitch, synthetic, plot = FALSE) {
     dplyr::mutate(z = z / total_dens) %>%
     dplyr::arrange(z) %>%
     dplyr::mutate(cumz = cumsum(z * c)) %>%
-    dplyr::arrange(desc(cumz)) %>%
-    dplyr::mutate(hdr = cumz > cut)
+    dplyr::arrange(desc(cumz))
 
   x_pos = which.min(abs(pitch$x - dens_synth$x))
   y_pos = which.min(abs(pitch$y - dens_synth$y))
 
-  dens_synth %>%
+  probs = dens_synth %>%
     dplyr::filter(.data$x == dens_synth$x[x_pos]) %>%
     dplyr::filter(.data$y == dens_synth$y[y_pos]) %>%
-    dplyr::pull(.data$hdr)
+    dplyr::pull(.data$cumz)
+
+  output = ifelse(probs > cut, TRUE, FALSE)
+  names(output) = alpha
+  return(output)
 
 }
