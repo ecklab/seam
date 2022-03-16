@@ -150,5 +150,6 @@ results = foreach(i = 1:nrow(tst)) %dopar% {
 
 }
 
-Reduce("+", results) / length(results)
+Reduce("+", results[sapply(results, Negate(anyNA))]) / length(results[sapply(results, Negate(anyNA))])
+results[sapply(results, Negate(anyNA))]
 parallel::stopCluster(cl)
