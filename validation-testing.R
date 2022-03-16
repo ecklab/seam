@@ -15,20 +15,19 @@ trn = bip %>%
 trn_b = trn %>%
   group_by(batter) %>%
   summarize(n = n()) %>%
-  filter(n > 5) %>%
+  filter(n > 25) %>%
   pull(batter)
 
 trn_p = trn %>%
   group_by(pitcher) %>%
   summarize(n = n()) %>%
-  filter(n > 5) %>%
+  filter(n > 25) %>%
   pull(pitcher)
 
 tst = bip %>%
   filter(game_year > 2020) %>%
   filter(batter %in% trn_b) %>%
   filter(pitcher %in% trn_p)
-
 
 validate_all = function(alpha = c(0.10, 0.25, 0.50, 0.75, 0.90)) {
 
@@ -40,10 +39,9 @@ validate_all = function(alpha = c(0.10, 0.25, 0.50, 0.75, 0.90)) {
     pitcher = tst[i, ]$pitcher
 
     # output matchups to find which causes warnings / error
-    # print(c(batter = batter, pitcher = pitcher))
+    print(c(batter = batter, pitcher = pitcher))
 
     try({
-
       seam = do_full_seam_matchup(
         .batter = batter,
         .pitcher = pitcher,
@@ -54,32 +52,29 @@ validate_all = function(alpha = c(0.10, 0.25, 0.50, 0.75, 0.90)) {
         .ratio_pitcher = .85
       )
 
-      for (k in seq_along(alpha)) {
-        in_hdr[i, , k] = c(
-          check_in_hdrs(
-            alpha = alpha[k],
-            pitch = tst[i, c("x", "y")],
-            synthetic = seam$seam_df,
-            plot = FALSE
-          ),
-          check_in_hdrs(
-            alpha = alpha[k],
-            pitch = tst[i, c("x", "y")],
-            synthetic = seam$empirical_pitcher_df,
-            plot = FALSE
-          ),
-          check_in_hdrs(
-            alpha = alpha[k],
-            pitch = tst[i, c("x", "y")],
-            synthetic = seam$empirical_batter_df,
-            plot = FALSE
-          )
+      in_hdr[i, , ] = rbind(
+        check_in_hdrs(
+          alpha = alpha,
+          pitch = tst[i, c("x", "y")],
+          synthetic = seam$seam_df,
+          plot = FALSE
+        ),
+        check_in_hdrs(
+          alpha = alpha,
+          pitch = tst[i, c("x", "y")],
+          synthetic = seam$empirical_pitcher_df,
+          plot = FALSE
+        ),
+        check_in_hdrs(
+          alpha = alpha,
+          pitch = tst[i, c("x", "y")],
+          synthetic = seam$empirical_batter_df,
+          plot = FALSE
         )
-      }
-
+      )
     })
 
-    if (i %% 100 == 0) {
+    if (i %% 5 == 0) {
       print(i)
       mat = rbind(
         colMeans(in_hdr[, , 1], na.rm = TRUE),
@@ -100,3 +95,60 @@ validate_all = function(alpha = c(0.10, 0.25, 0.50, 0.75, 0.90)) {
 }
 
 results = validate_all()
+results
+
+# testing parallel validation
+library(foreach)
+cl = parallel::makeForkCluster(parallel::detectCores() - 1)
+doParallel::registerDoParallel(cl)
+
+alpha = alpha = c(0.10, 0.25, 0.50, 0.75, 0.90)
+tst = tst[, c("batter", "pitcher", "x", "y")]
+
+results = foreach(i = 1:7500) %dopar% {
+
+  batter = tst[i,]$batter
+  pitcher = tst[i,]$pitcher
+
+  in_hdr = matrix(NA, nrow = 3, ncol = length(alpha))
+
+  try({
+    seam = do_full_seam_matchup(
+      .batter = batter,
+      .pitcher = pitcher,
+      .bip = trn,
+      .batter_pool = batter_pool,
+      .pitcher_pool = pitcher_pool,
+      .ratio_batter = .85,
+      .ratio_pitcher = .85
+    )
+
+    in_hdr = rbind(
+      seam = check_in_hdrs(
+        alpha = alpha,
+        pitch = tst[i, c("x", "y")],
+        synthetic = seam$seam_df,
+        plot = FALSE
+      ),
+      e_pitch = check_in_hdrs(
+        alpha = alpha,
+        pitch = tst[i, c("x", "y")],
+        synthetic = seam$empirical_pitcher_df,
+        plot = FALSE
+      ),
+      e_batter = check_in_hdrs(
+        alpha = alpha,
+        pitch = tst[i, c("x", "y")],
+        synthetic = seam$empirical_batter_df,
+        plot = FALSE
+      )
+    )
+
+  })
+
+  in_hdr
+
+}
+
+Reduce("+", results) / length(results)
+parallel::stopCluster(cl)
