@@ -105,7 +105,7 @@ doParallel::registerDoParallel(cl)
 alpha = alpha = c(0.10, 0.25, 0.50, 0.75, 0.90)
 tst = tst[, c("batter", "pitcher", "x", "y")]
 
-results = foreach(i = 1:7500) %dopar% {
+results = foreach(i = 1:nrow(tst)) %dopar% {
 
   batter = tst[i,]$batter
   pitcher = tst[i,]$pitcher
