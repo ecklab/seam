@@ -97,18 +97,20 @@ validate_conditional = function() {
 
 }
 
-# results = validate_conditional()
-Reduce(`+`, results) / length(results)
+results = validate_conditional()
 
+Reduce(`+`, results) / length(results)
 
 extract_row = function(mat, row) {
   mat[row, ]
 }
 
 res_050 = dplyr::bind_rows(lapply(results, extract_row, row = 3))
-mean(res_050$seam > 0.50)
-mean(res_050$batter > 0.50)
-mean(res_050$pitcher > 0.50)
+round(c(
+  seam = mean(res_050$seam > 0.50),
+  batter = mean(res_050$batter > 0.50),
+  pitcher = mean(res_050$pitcher > 0.50)
+), 3)
 
 res_050_long = tidyr::pivot_longer(res_050, cols = 1:3)
 ggplot(res_050_long) +
