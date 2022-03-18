@@ -39,7 +39,7 @@ ui = fluidPage(
   sidebarLayout(
     sidebarPanel(
       selectInput("pitcher", label = "Pitcher", choices = unique(p_lu$pitcher_name), selected = "Justin Verlander"),
-      sliderInput("p_ratio", "Ratio of Stuff to Release", min = .50, max = 1, value = .85, step = .01),
+      sliderInput("p_ratio", "Ratio of Stuff to Release", min = 0, max = 1, value = .85, step = .01),
       hr(),
       selectInput("batter", label = "Batter", choices = unique(b_lu$batter_name), selected = "Mike Trout"),
       sliderInput("b_ratio", "Ratio of LA/EV to Batted Ball Location", min = 0, max = 1, value = .85, step = .01),
