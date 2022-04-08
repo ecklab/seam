@@ -98,6 +98,7 @@ validate_conditional = function() {
 }
 
 results = validate_conditional()
+saveRDS(results, file = "validation/conditional-coverage.Rds")
 
 Reduce(`+`, results) / length(results)
 
