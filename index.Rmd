@@ -16,7 +16,7 @@ a {color: #31a354;}
 ## Information
 
 - [**SEAM 2.0 Shiny Application**](https://seam.stat.illinois.edu/app/) [ [Source @ GitHub](https://github.com/ecklab/seam/) ]
-- [SEAM 1.0 Article Preprint PDF](seam.pdf)
+- [SEAM 1.0 Article Preprint PDF](https://github.com/ecklab/seam-manuscript/blob/main/seam.pdf)
 - [SEAM 1.0 Fangraphs Article](https://community.fangraphs.com/seam-methodology-for-player-matchup-evaluations/)
 
 ## Authors
@@ -29,7 +29,7 @@ a {color: #31a354;}
   - Quantitative Developer, Houston Astros
 - [David Dalpiaz](https://daviddalpiaz.org/)
   - Assistant Teaching Professor, Department of Statistics @ Illinois
-- [Daniel Eck](https://publish.illinois.edu/danieleck/)
+- [Daniel J. Eck](https://publish.illinois.edu/danieleck/)
   - Assistant Professor, Department of Statistics @ Illinois
 
 ## Acknowledgments
@@ -38,11 +38,5 @@ This work is supported by:
 
 - [ATLAS Infrastructure](https://atlas.illinois.edu/)
 
-This work was improved by helpful comments and feedback from:
+This work was improved by helpful comments and feedback from: [Alan Nathan](http://baseball.physics.illinois.edu/), [John Marden](http://www.stat.istics.net/), [James Balamuta](https://www.thecoatlessprofessor.com/), [Dave Zhao](https://stat.illinois.edu/directory/profile/sdzhao), [Dootika Vats](http://home.iitk.ac.in/~dootika/)
 
-- [Alan Nathan](http://baseball.physics.illinois.edu/)
-- [Jim Albert](http://www-math.bgsu.edu/~albert/)
-- [James Balamuta](https://www.thecoatlessprofessor.com/)
-- [John Marden](http://www.stat.istics.net/)
-- [Dootika Vats](http://home.iitk.ac.in/~dootika/)
-- [Dave Zhao](https://stat.illinois.edu/directory/profile/sdzhao)
