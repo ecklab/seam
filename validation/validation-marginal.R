@@ -150,6 +150,8 @@ results = foreach(i = 1:nrow(tst)) %dopar% {
 
 }
 
-Reduce("+", results[sapply(results, Negate(anyNA))]) / length(results[sapply(results, Negate(anyNA))])
-results[sapply(results, Negate(anyNA))]
+# stop cluster
 parallel::stopCluster(cl)
+
+# store intermediate results
+saveRDS(results, file = "validation/marginal-coverage.Rds")

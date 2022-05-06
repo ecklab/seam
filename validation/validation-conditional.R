@@ -1,6 +1,8 @@
+# load packages and seam functions
 library(tidyverse)
 devtools::load_all()
 
+# load data
 bip = readRDS("data/bip.Rds")
 b_lu = as.data.frame(readRDS("data/b-lu.Rds")) # why does this break as a tibble....??
 p_lu = as.data.frame(readRDS("data/p-lu.Rds")) # why does this break as a tibble....??
@@ -9,6 +11,7 @@ p_lu = as.data.frame(readRDS("data/p-lu.Rds")) # why does this break as a tibble
 batter_pool = get_batter_pool(bip = bip, year_start = 2017, year_end = 2020)
 pitcher_pool = get_pitcher_pool(bip = bip, year_start = 2017, year_end = 2020)
 
+# function to perform conditional validation
 validate_conditional = function() {
 
   alpha = c(0.10, 0.25, 0.50, 0.75, 0.90)
@@ -97,23 +100,8 @@ validate_conditional = function() {
 
 }
 
+# run conditional validation
 results = validate_conditional()
+
+# store intermediate results
 saveRDS(results, file = "validation/conditional-coverage.Rds")
-
-Reduce(`+`, results) / length(results)
-
-extract_row = function(mat, row) {
-  mat[row, ]
-}
-
-res_050 = dplyr::bind_rows(lapply(results, extract_row, row = 3))
-round(c(
-  seam = mean(res_050$seam > 0.50),
-  batter = mean(res_050$batter > 0.50),
-  pitcher = mean(res_050$pitcher > 0.50)
-), 3)
-
-res_050_long = tidyr::pivot_longer(res_050, cols = 1:3)
-ggplot(res_050_long) +
-  aes(x = value, fill = name) +
-  geom_density(alpha = 0.2)
