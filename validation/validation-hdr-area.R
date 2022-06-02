@@ -49,3 +49,4 @@ for (i in 1:nrow(matchups)) {
 head(results)
 saveRDS(results, file = "validation/conditional-hdr-area.Rds")
 colMeans(results)
+apply(results, 2, sd)
