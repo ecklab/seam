@@ -34,3 +34,30 @@ check_in_hdrs = function(alpha, pitch, synthetic, plot = FALSE) {
   return(output)
 
 }
+
+calc_hdr_size = function(alpha, synthetic, plot = FALSE) {
+
+  if (plot) {
+    p = plot_df(df = synthetic, main = "", stadium = "generic")
+    print(p)
+  }
+
+  # TODO: pull these programatically from the input df? (slightly slower)
+  # TODO: mirror this in plotting code
+  x_diff = (150 + 150) / 99
+  y_diff = (200 + 30) / 99
+
+  c = x_diff * y_diff
+
+  total_dens = sum(synthetic$z * c)
+  cut = (1 - alpha)
+
+  dens_synth = synthetic %>%
+    dplyr::mutate(z = z / total_dens) %>%
+    dplyr::arrange(z) %>%
+    dplyr::mutate(cumz = cumsum(z * c)) %>%
+    dplyr::arrange(desc(cumz))
+
+  return(mean(dens_synth$cumz > cut))
+
+}
