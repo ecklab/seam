@@ -56,7 +56,15 @@ res_025 = get_area(alpha = 0.25)
 res_050 = get_area(alpha = 0.50)
 res_075 = get_area(alpha = 0.75)
 
-head(results)
-saveRDS(results, file = "validation/conditional-hdr-area.Rds")
-colMeans(results)
-apply(results, 2, sd)
+saveRDS(res_025, file = "validation/conditional-hdr-area-025.Rds")
+saveRDS(res_050, file = "validation/conditional-hdr-area-050.Rds")
+saveRDS(res_075, file = "validation/conditional-hdr-area-075.Rds")
+
+colMeans(res_025)
+apply(res_025, 2, sd)
+
+colMeans(res_050)
+apply(res_050, 2, sd)
+
+colMeans(res_075)
+apply(res_075, 2, sd)
