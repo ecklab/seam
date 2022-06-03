@@ -24,27 +24,37 @@ matchups = bip %>%
   filter(batter != 677551) %>% # only 2021 bip (cannot fit to trn)
   filter(pitcher != 657093)    # only 2021 bip (cannot fit to trn)
 
-results = matrix(data = 0, nrow = nrow(matchups), ncol = 3)
+get_area = function(alpha) {
 
-for (i in 1:nrow(matchups)) {
+  results = matrix(data = 0, nrow = nrow(matchups), ncol = 3)
 
-  est = do_full_seam_matchup(
-    .batter = matchups[i, ]$batter,
-    .pitcher = matchups[i, ]$pitcher,
-    .bip = trn,
-    .batter_pool = batter_pool,
-    .pitcher_pool = pitcher_pool,
-    .ratio_batter = .85,
-    .ratio_pitcher = .85
-  )
+  for (i in 1:nrow(matchups)) {
 
-  results[i, ] = c(
-    calc_hdr_size(alpha = 0.50, synthetic = est$seam_df),
-    calc_hdr_size(alpha = 0.50, synthetic = est$empirical_pitcher_df),
-    calc_hdr_size(alpha = 0.50, synthetic = est$empirical_batter_df)
-  )
+    est = do_full_seam_matchup(
+      .batter = matchups[i, ]$batter,
+      .pitcher = matchups[i, ]$pitcher,
+      .bip = trn,
+      .batter_pool = batter_pool,
+      .pitcher_pool = pitcher_pool,
+      .ratio_batter = .85,
+      .ratio_pitcher = .85
+    )
+
+    results[i, ] = c(
+      calc_hdr_size(alpha = alpha, synthetic = est$seam_df),
+      calc_hdr_size(alpha = alpha, synthetic = est$empirical_pitcher_df),
+      calc_hdr_size(alpha = alpha, synthetic = est$empirical_batter_df)
+    )
+
+  }
+
+  return(results)
 
 }
+
+res_025 = get_area(alpha = 0.25)
+res_050 = get_area(alpha = 0.50)
+res_075 = get_area(alpha = 0.75)
 
 head(results)
 saveRDS(results, file = "validation/conditional-hdr-area.Rds")
