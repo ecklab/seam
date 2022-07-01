@@ -38,5 +38,3 @@ res_090 |>
   aes(x = area, group = type, fill = type) +
   geom_histogram() +
   facet_wrap(~ type, nrow = 3)
-
-
