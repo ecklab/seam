@@ -15,7 +15,7 @@ c = x_diff * y_diff
 res = rbind(
   c * colMeans(res_dns_1000),
   c * colMeans(res_dns_2000),
-  c * colMeans(res_dns_2000)
+  c * colMeans(res_dns_3000)
 )
 
 colnames(res) = c("seam", "pitcher", "batter")

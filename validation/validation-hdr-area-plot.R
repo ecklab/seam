@@ -22,3 +22,21 @@ res_050 |>
   aes(x = area, group = type, fill = type) +
   geom_histogram() +
   facet_wrap(~ type, nrow = 3)
+
+res_075 |>
+  as_tibble() |>
+  pivot_longer(col = seam:batter, names_to = "type", values_to = "area") |>
+  ggplot() +
+  aes(x = area, group = type, fill = type) +
+  geom_histogram() +
+  facet_wrap(~ type, nrow = 3)
+
+res_090 |>
+  as_tibble() |>
+  pivot_longer(col = seam:batter, names_to = "type", values_to = "area") |>
+  ggplot() +
+  aes(x = area, group = type, fill = type) +
+  geom_histogram() +
+  facet_wrap(~ type, nrow = 3)
+
+
