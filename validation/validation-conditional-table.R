@@ -20,7 +20,6 @@ res_050 = dplyr::bind_rows(lapply(results, extract_row, row = 3))
 res_075 = dplyr::bind_rows(lapply(results, extract_row, row = 4))
 res_090 = dplyr::bind_rows(lapply(results, extract_row, row = 5))
 
-
 cond_covs = cbind(
   round(c(
     seam = mean(res_010$seam > 0.10),

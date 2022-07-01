@@ -24,7 +24,7 @@ matchups = bip %>%
   filter(batter != 677551) %>% # only 2021 bip (cannot fit to trn)
   filter(pitcher != 657093)    # only 2021 bip (cannot fit to trn)
 
-get_area = function(alpha) {
+get_dens = function(n) {
 
   results = matrix(data = 0, nrow = nrow(matchups), ncol = 3)
 
@@ -41,9 +41,9 @@ get_area = function(alpha) {
     )
 
     results[i, ] = c(
-      calc_hdr_size(alpha = alpha, synthetic = est$seam_df),
-      calc_hdr_size(alpha = alpha, synthetic = est$empirical_pitcher_df),
-      calc_hdr_size(alpha = alpha, synthetic = est$empirical_batter_df)
+      calc_area_dens(n = n, synthetic = est$seam_df),
+      calc_area_dens(n = n, synthetic = est$empirical_pitcher_df),
+      calc_area_dens(n = n, synthetic = est$empirical_batter_df)
     )
 
   }
@@ -52,14 +52,10 @@ get_area = function(alpha) {
 
 }
 
-res_010 = get_area(alpha = 0.10)
-res_025 = get_area(alpha = 0.25)
-res_050 = get_area(alpha = 0.50)
-res_075 = get_area(alpha = 0.75)
-res_090 = get_area(alpha = 0.90)
+res_dns_1000 = get_dens(n = 1000) # 10%
+res_dns_2000 = get_dens(n = 2000) # 20%
+res_dns_3000 = get_dens(n = 3000) # 30%
 
-saveRDS(res_010, file = "validation/conditional-hdr-area-010.Rds")
-saveRDS(res_025, file = "validation/conditional-hdr-area-025.Rds")
-saveRDS(res_050, file = "validation/conditional-hdr-area-050.Rds")
-saveRDS(res_075, file = "validation/conditional-hdr-area-075.Rds")
-saveRDS(res_090, file = "validation/conditional-hdr-area-090.Rds")
+saveRDS(res_dns_1000, file = "validation/conditional-area-dens-1000.Rds")
+saveRDS(res_dns_2000, file = "validation/conditional-area-dens-2000.Rds")
+saveRDS(res_dns_3000, file = "validation/conditional-area-dens-3000.Rds")

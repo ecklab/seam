@@ -61,3 +61,29 @@ calc_hdr_size = function(alpha, synthetic, plot = FALSE) {
   return(mean(dens_synth$cumz > cut))
 
 }
+
+calc_area_dens = function(n, synthetic, plot = FALSE) {
+
+  if (plot) {
+    p = plot_df(df = synthetic, main = "", stadium = "generic")
+    print(p)
+  }
+
+  # TODO: pull these programatically from the input df? (slightly slower)
+  # TODO: mirror this in plotting code
+  x_diff = (150 + 150) / 99
+  y_diff = (200 + 30) / 99
+
+  c = x_diff * y_diff
+
+  total_dens = sum(synthetic$z * c)
+
+  z = synthetic %>%
+    dplyr::mutate(z = z / total_dens) %>%
+    dplyr::pull(z)
+
+  z = sort(z, decreasing = TRUE)
+
+  return(sum(z[1:n]))
+
+}
