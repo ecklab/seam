@@ -83,8 +83,14 @@ get_top_n_coverage = function(n) {
 
 }
 
-# TODO: this is currently very inefficient, lots of duplicated calculations
+# results for "all n"
+graph_points = c(250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000)
+results_many_n = lapply(graph_points, get_top_n_coverage)
 
+# save results for many n as a list
+saveRDS(results_many_n, file = "validation/conditional-top-n-cov-n.Rds")
+
+# results for some n
 res_tnc_1000 = get_top_n_coverage(n = 1000) # 10%
 res_tnc_2000 = get_top_n_coverage(n = 2000) # 20%
 res_tnc_3000 = get_top_n_coverage(n = 3000) # 30%

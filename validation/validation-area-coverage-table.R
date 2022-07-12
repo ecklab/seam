@@ -22,8 +22,6 @@ results
 # output with latex formatting
 knitr::kable(results, format = "latex")
 
-
-
 results_se = rbind(
   apply(res_tnc_1000, 2, function(x) sd(x)/length(x)),
   apply(res_tnc_2000, 2, function(x) sd(x)/length(x)),
@@ -32,5 +30,3 @@ results_se = rbind(
 
 # preview table
 results_se
-
-
