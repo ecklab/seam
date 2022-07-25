@@ -17,6 +17,6 @@ res_tnc_n |>
   aes(x = n, y = value, color = name) +
   geom_point() +
   geom_line() +
-  ylab("conditional coverage") +
+  ylab("Average conditional coverage") +
   ggtitle("Conditional coverage vs region size") +
   theme_bw()
