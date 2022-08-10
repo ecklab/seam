@@ -26,6 +26,8 @@ matchups = bip %>%
 
 get_top_n_coverage = function(n) {
 
+  print(n)
+
   results = matrix(data = 0, nrow = nrow(matchups), ncol = 3)
 
   for (i in 1:nrow(matchups)) {
@@ -83,8 +85,18 @@ get_top_n_coverage = function(n) {
 
 }
 
+
+
+# 2.33 * diff(asdf$seam_df$x[1:2]) * 2.33 * diff(unique(asdf$seam_df$y)[1:2]) * 3000
+# 115000 * c(0.50, 0.80)
+# 92000 / (2.33 * diff(asdf$seam_df$x[1:2]) * 2.33 * diff(unique(asdf$seam_df$y)[1:2]))
+# 57500 / (2.33 * diff(asdf$seam_df$x[1:2]) * 2.33 * diff(unique(asdf$seam_df$y)[1:2]))
+# 8 - 10 x points
+# seq(from = 1500, to = 2500, length.out = 10)
+
 # results for "all n"
-graph_points = c(250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000)
+# graph_points = c(250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000)
+graph_points = seq(from = 1500, to = 2500, by = 100)
 results_many_n = lapply(graph_points, get_top_n_coverage)
 
 # save results for many n as a list
