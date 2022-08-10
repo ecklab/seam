@@ -23,10 +23,7 @@ a {color: #31a354;}
 
 - [Julia Wapner]()
   - Undergrad Student, Department of Statistics @ Illinois
-  - Analyst, Illini Baseball
-- [Charlie Young](https://twitter.com/youngcharles02)
-  - Former Director of Analytics, Illini Baseball
-  - Quantitative Developer, Houston Astros
+  - Former Analyst, Illini Baseball
 - [David Dalpiaz](https://daviddalpiaz.org/)
   - Assistant Teaching Professor, Department of Statistics @ Illinois
 - [Daniel J. Eck](https://publish.illinois.edu/danieleck/)
@@ -38,5 +35,5 @@ This work is supported by:
 
 - [ATLAS Infrastructure](https://atlas.illinois.edu/)
 
-This work was improved by helpful comments and feedback from: [Alan Nathan](http://baseball.physics.illinois.edu/), [John Marden](http://www.stat.istics.net/), [James Balamuta](https://www.thecoatlessprofessor.com/), [Dave Zhao](https://stat.illinois.edu/directory/profile/sdzhao), [Dootika Vats](http://home.iitk.ac.in/~dootika/)
+This work was improved by helpful comments and feedback from: [Alan Nathan](http://baseball.physics.illinois.edu/), [John Marden](http://www.stat.istics.net/), [James Balamuta](https://www.thecoatlessprofessor.com/), [Dave Zhao](https://stat.illinois.edu/directory/profile/sdzhao)
 
