@@ -20,3 +20,6 @@ res_tnc_n |>
   ylab("Average conditional coverage") +
   ggtitle("Conditional coverage vs region size") +
   theme_bw()
+
+
+knitr::kable(round(res_tnc_n %>% spread(name, value), 3), format = "latex")
