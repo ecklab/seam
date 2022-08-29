@@ -23,3 +23,12 @@ res_tnc_n |>
 
 
 knitr::kable(round(res_tnc_n %>% spread(name, value), 3), format = "latex")
+
+
+foo <- round(res_tnc_n %>% spread(name, value), 3)
+ks.test(unlist(foo[,1]), unlist(foo[,3]))
+
+
+## standard error calculation
+res_tnc_n_se = t(sapply(results_many_n, FUN = function(xx) apply(xx, 2, function(x) sd(x)/sqrt(length(x))) ))
+res_tnc_n_se
