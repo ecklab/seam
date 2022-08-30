@@ -1,0 +1,14 @@
+name: seam
+title: seam
+username:
+account: deck13
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6823744
+bundleId: 6225664
+url: https://deck13.shinyapps.io/seam/
+when: 1661176983.3864
+lastSyncTime: 1661176983.38641
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .github/.gitignore|.github/workflows/run-tests.yaml|.Rbuildignore|DESCRIPTION|index.html|index.Rmd|LICENSE.md|README.md|tests/testthat/test-kde.R|tests/testthat.R|validation

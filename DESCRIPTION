@@ -1,12 +1,17 @@
 Package: seam
 Title: Functions to Apply SEAM Methodology
 Version: 0.0.0.9001
-Authors@R: 
+Authors@R: c(
     person(given = "David",
            family = "Dalpiaz",
            role = c("aut", "cre"),
            email = "dalpiaz2@illinois.edu",
-           comment = c(ORCID = "0000-0003-4478-9288"))
+           comment = c(ORCID = "0000-0003-4478-9288")), 
+    person(given = "Daniel",
+	   family = "Eck",
+	   role = "aut", 
+	   email = "dje13@illinois.edu", 
+	   comment = c(ORCID = "0000-0002-2571-5331")))
 Description: The {seam} package provides functions to use SEAM methodology.
 License: MIT + file LICENSE
 Encoding: UTF-8

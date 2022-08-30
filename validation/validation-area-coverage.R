@@ -1,6 +1,8 @@
 # load packages and seam functions
 library(tidyverse)
+library(parallel)
 devtools::load_all()
+setwd("../")
 
 # load data
 bip = readRDS("data/bip.Rds")
@@ -96,8 +98,8 @@ get_top_n_coverage = function(n) {
 
 # results for "all n"
 # graph_points = c(250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000)
-graph_points = seq(from = 1500, to = 2500, by = 100)
-results_many_n = lapply(graph_points, get_top_n_coverage)
+graph_points = seq(from = 1500, to = 2500, by = 50)
+results_many_n = mclapply(graph_points, get_top_n_coverage, mc.cores = 11)
 
 # save results for many n as a list
 saveRDS(results_many_n, file = "validation/conditional-top-n-cov-n.Rds")
