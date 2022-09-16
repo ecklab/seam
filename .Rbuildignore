@@ -9,3 +9,5 @@
 ^app\.R$
 ^setup\.R$
 ^data$
+app.R
+^validation\.R$
