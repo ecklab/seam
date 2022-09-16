@@ -6,8 +6,8 @@ scale_this = function(x) {
 get_batter_pool = function(bip, year_start = 2017, year_end = 2021) {
 
   bip = bip %>%
-    filter(.data$game_year >= year_start) %>%
-    filter(.data$game_year <= year_end)
+    dplyr::filter(.data$game_year >= year_start) %>%
+    dplyr::filter(.data$game_year <= year_end)
 
   # batter pool by "year"
   batter_pool_year = bip %>%
@@ -90,8 +90,8 @@ make_bip_pool_synth_batter = function(.pitch_type, .batter, .pitcher, .bip, .bat
 get_pitcher_pool = function(bip, year_start = 2017, year_end = 2021) {
 
   bip = bip %>%
-    filter(.data$game_year >= year_start) %>%
-    filter(.data$game_year <= year_end)
+    dplyr::filter(.data$game_year >= year_start) %>%
+    dplyr::filter(.data$game_year <= year_end)
 
   # pitcher pool by "year"
   pitcher_pool_year = bip %>%
