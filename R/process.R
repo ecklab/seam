@@ -98,7 +98,7 @@ process_statcast = function(data, player_ids) {
     dplyr::summarise(team = names(which.max(table(batter_team))))
 
   data = data %>%
-    dplyr::left_join(to_get_teams, by = "batter") %>%
+    dplyr::left_join(to_get_teams, by = "batter")
 
   # return result
   return(data)
