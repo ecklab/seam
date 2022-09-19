@@ -10,4 +10,5 @@
 ^setup\.R$
 ^data$
 app.R
+setup.R
 ^validation\.R$
