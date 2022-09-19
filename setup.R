@@ -76,8 +76,9 @@ if (!file.exists("data/mlb-teams.Rds") | !file.exists("data/stadiums.Rds")) {
 }
 
 # get stadium dimensions
-if (!file.exists("data/stadium-paths.Rds") {
-  saveRDS(GeomMLBStadiums::MLBStadiumsPathData, "data/stadium-paths.Rds")
+if (!file.exists("data/stadium-paths.Rds")) {
+  saveRDS(GeomMLBStadiums::MLBStadiumsPathData,
+          "data/stadium-paths.Rds")
 }
 
 required_files = c(
