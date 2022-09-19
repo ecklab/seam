@@ -58,6 +58,9 @@ do_full_seam_matchup = function(.batter, .pitcher, .bip, .batter_pool, .pitcher_
     kde_helper() %>%
     kde_to_df()
 
+  empirical_both_df = empirical_batter_df
+  empirical_both_df$z = 0.5 * empirical_batter_df$z + 0.5 * empirical_pitcher_df$z
+
   # true matchup ###############################################################
 
   empirical_pool = make_empirical_pool(
@@ -185,14 +188,23 @@ do_full_seam_matchup = function(.batter, .pitcher, .bip, .batter_pool, .pitcher_
     lambda_b * synth_batter_df$z +
     lambda_p * synth_pitcher_df$z
 
+  seam_mod_df = seam_df
+
+  seam_mod_df$z =
+    lambda * empirical_df$z +
+    lambda_b * empirical_batter_df$z +
+    lambda_p * empirical_pitcher_df$z
+
   # return #####################################################################
 
   list(
     seam_df = seam_df, # full synthetic estimated distribution
+    seam_mod_df = seam_mod_df, # seam modification with empirical for batter and pitcher
     empirical_pool = empirical_pool, # real matchup data
     empirical_df = empirical_df, # real matchup estimated distribution
     empirical_pitcher_df = empirical_pitcher_df, # real pitcher estimated distribution
     empirical_batter_df = empirical_batter_df, # real batter estimated distribution
+    empirical_both_df = empirical_both_df, # 50-50 blend of real batter and real pitcher
     synth_pitcher_df = synth_pitcher_df, # synthetic pitcher estimated distribution
     synth_batter_df = synth_batter_df # synthetic batter estimated distribution
   )
