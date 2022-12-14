@@ -4,15 +4,48 @@ devtools::load_all()
 
 # load previously calculated results
 results_many_n = readRDS(file = "validation/conditional-top-n-cov-n.Rds")
+results_many_n_d05 = readRDS(file = "validation/conditional-top-n-cov-n-d05.Rds")
+results_many_n_d10 = readRDS(file = "validation/conditional-top-n-cov-n-d10.Rds")
+results_many_n_d20 = readRDS(file = "validation/conditional-top-n-cov-n-d20.Rds")
+results_many_n_d30 = readRDS(file = "validation/conditional-top-n-cov-n-d30.Rds")
 
-res_tnc_n = t(sapply(results_many_n, colMeans))
-graph_points = seq(from = 1500, to = 2500, by = 50)
-rownames(res_tnc_n) = graph_points
-res_tnc_n = as.data.frame(res_tnc_n)
-res_tnc_n$n = as.numeric(rownames(res_tnc_n))
-res_tnc_n = res_tnc_n |> tidyr::pivot_longer(cols = c("seam", "batter", "pitcher", "seam_mod", "both"))
+process_results = function(res) {
+  res = t(sapply(res, colMeans))
+  graph_points = seq(from = 1500, to = 2500, by = 50)
+  rownames(res) = graph_points
+  res = as.data.frame(res)
+  res$n = as.numeric(rownames(res))
+  res = res |> tidyr::pivot_longer(cols = c("seam", "batter", "pitcher", "seam_mod", "both"))
+  res
+}
 
-res_tnc_n |>
+res_n_d05 = process_results(results_many_n_d05)
+res_n_d10 = process_results(results_many_n_d10)
+res_n_d20 = process_results(results_many_n_d20)
+res_n_d30 = process_results(results_many_n_d30)
+
+res_n_d05 = res_n_d05 |>
+  dplyr::filter(name == "seam")
+res_n_d05$name = "seam_05"
+
+res_n_d10 = res_n_d30 |>
+  dplyr::filter(name == "seam")
+res_n_d10$name = "seam_10"
+
+res_n_d30 = res_n_d30 |>
+  dplyr::filter(name == "seam")
+res_n_d30$name = "seam_30"
+
+res = rbind.data.frame(res_n_d20, res_n_d05, res_n_d10, res_n_d30)
+
+# res_tnc_n = t(sapply(results_many_n, colMeans))
+# graph_points = seq(from = 1500, to = 2500, by = 50)
+# rownames(res_tnc_n) = graph_points
+# res_tnc_n = as.data.frame(res_tnc_n)
+# res_tnc_n$n = as.numeric(rownames(res_tnc_n))
+# res_tnc_n = res_tnc_n |> tidyr::pivot_longer(cols = c("seam", "batter", "pitcher", "seam_mod", "both"))
+
+res |>
   ggplot() +
     aes(x = n, y = value, color = name) +
     geom_point() +
@@ -21,6 +54,23 @@ res_tnc_n |>
     ylab("Average conditional coverage") +
     ggtitle("Conditional coverage vs region size") +
     theme_bw()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # knitr::kable(round(res_tnc_n %>% spread(name, value), 3), format = "latex")
 #

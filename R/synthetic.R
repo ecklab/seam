@@ -1,9 +1,9 @@
-calc_n_synth = function(df) {
-  sum(df$similarity ^ 2)
+calc_n_synth = function(df, d = 2) {
+  sum(df$similarity ^ d)
 }
 
 #' @export
-do_full_seam_matchup = function(.batter, .pitcher, .bip, .batter_pool, .pitcher_pool, .ratio_batter, .ratio_pitcher) {
+do_full_seam_matchup = function(.batter, .pitcher, .bip, .batter_pool, .pitcher_pool, .ratio_batter, .ratio_pitcher, .d = 2) {
 
   hands = get_matchup_hands(
     bip = .bip,
@@ -78,7 +78,7 @@ do_full_seam_matchup = function(.batter, .pitcher, .bip, .batter_pool, .pitcher_
     empirical_df$z = 0
   }
 
-  if(n > 1) {
+  if (n > 1) {
     empirical_df = empirical_pool %>%
       kde_helper() %>%
       kde_to_df()
@@ -103,7 +103,7 @@ do_full_seam_matchup = function(.batter, .pitcher, .bip, .batter_pool, .pitcher_
       .ratio = .ratio_batter
     )
 
-    n_b = sum(sapply(synth_batter_pools, calc_n_synth))
+    n_b = sum(sapply(synth_batter_pools, calc_n_synth, d = .d))
 
     # synth_batter_z = lapply(synth_batter_pools, kde_helper) %>%
     #   lapply(kde_to_df) %>%
@@ -147,7 +147,7 @@ do_full_seam_matchup = function(.batter, .pitcher, .bip, .batter_pool, .pitcher_
       .ratio = .ratio_pitcher
     )
 
-    n_p = sum(sapply(synth_pitcher_pools, calc_n_synth))
+    n_p = sum(sapply(synth_pitcher_pools, calc_n_synth, d = .d))
 
     # synth_pitcher_z = lapply(synth_pitcher_pools, kde_helper) %>%
     #   lapply(kde_to_df) %>%

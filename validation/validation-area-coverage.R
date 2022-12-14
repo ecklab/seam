@@ -25,7 +25,7 @@ matchups = bip |>
 
 method_list = c("seam", "batter", "pitcher", "seam_mod", "both")
 
-get_top_n_coverage = function(n) {
+get_top_n_coverage = function(n, d = 2) {
 
   print(n)
 
@@ -41,7 +41,8 @@ get_top_n_coverage = function(n) {
       .batter_pool = batter_pool,
       .pitcher_pool = pitcher_pool,
       .ratio_batter = .85,
-      .ratio_pitcher = .85
+      .ratio_pitcher = .85,
+      .d = d
     )
 
     # create test set for matchup
@@ -77,6 +78,18 @@ results_many_n = parallel::mclapply(graph_points, get_top_n_coverage, mc.cores =
 
 # save results for many n as a list
 saveRDS(results_many_n, file = "validation/conditional-top-n-cov-n.Rds")
+
+# results for "all n" and varying "d"
+results_many_n_d05 = parallel::mclapply(graph_points, get_top_n_coverage, mc.cores = 8, d = 0.5)
+results_many_n_d10 = parallel::mclapply(graph_points, get_top_n_coverage, mc.cores = 8, d = 1.0)
+results_many_n_d20 = parallel::mclapply(graph_points, get_top_n_coverage, mc.cores = 8, d = 2.0)
+results_many_n_d30 = parallel::mclapply(graph_points, get_top_n_coverage, mc.cores = 8, d = 3.0)
+
+# save results for many n as a list
+saveRDS(results_many_n_d05, file = "validation/conditional-top-n-cov-n-d05.Rds")
+saveRDS(results_many_n_d10, file = "validation/conditional-top-n-cov-n-d10.Rds")
+saveRDS(results_many_n_d20, file = "validation/conditional-top-n-cov-n-d20.Rds")
+saveRDS(results_many_n_d30, file = "validation/conditional-top-n-cov-n-d30.Rds")
 
 # # results for some n
 # res_tnc_1000 = get_top_n_coverage(n = 1000) # 10%
