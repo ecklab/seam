@@ -1,28 +1,22 @@
-generate_weeks = function(start_year = format(Sys.Date(), "%Y"),
-                          end_year = format(Sys.Date(), "%Y")) {
-  start = seq(as.Date(paste0(start_year, "-01-01")),
-              as.Date(paste0(end_year, "-12-31")), by = "1 week")
-  print(length(start))
-  end = start + 6
-  end[length(end)] = paste0(end_year, "-12-31")
-  return(data.frame(start, end))
-}
+dl_year = function(year) {
+  message(paste("Processing stats for ", year, " season:"))
 
-dl_week = function(week) {
-  message("Processing the week starting on: ", week[1])
-  url = paste0(
-    "https://baseballsavant.mlb.com/statcast_search/csv?all=true&game_date_gt=",
-    week[1],
-    "&game_date_lt=",
-    week[2],
-    "&type=details"
+  cluster = parallel::makeCluster(parallel::detectCores())
+  data_temp_year = sabRmetrics::download_baseballsavant(    # FIXME: need to try both again... try baseball savant and statcast...
+    start_date = paste0(year, "-01-01"),
+    end_date = paste0(year, "-12-31"),
+    cl = cluster
   )
-  data.table::fread(url)
+  parallel::stopCluster(cluster)
+
+  return(data_temp_year)
 }
 
 dl_statcast = function(start_year, end_year) {
-  weeks = generate_weeks(start_year = start_year, end_year = end_year)
-  dled_weeks = apply(weeks, 1, dl_week)
-  dled_weeks = dled_weeks[sapply(dled_weeks, function(x) {nrow(x) != 0})]
-  return(data.table::rbindlist(dled_weeks))
+  years = seq.int(start_year, end_year)
+  data = lapply(years, dl_year)
+  return(data.table::rbindlist(data))
 }
+
+# TODO: need to edit this one... combine the first three tables using download_statsapi()
+# SOOOO... look at test log, have column names of everthing just double check w process.R
