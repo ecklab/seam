@@ -24,7 +24,8 @@ lu_b = function(.b_lu, .batter_name) {
 
 get_player_ids = function() {
   # really need to download a copy of this data for backup and offline use
-  url = "https://raw.githubusercontent.com/chadwickbureau/register/master/data/people.csv"
+  # TODO: verify this file replicates old chadwick file
+  url = "https://raw.githubusercontent.com/timothyf/mlb-player-lookup/refs/heads/main/mlb-player-lookup/data/combined_people.csv"
   data.table::fread(url, sep = ",") %>%
     dplyr::select(.data$key_mlbam, .data$name_last, .data$name_first) %>%
     dplyr::filter(!is.na(.data$key_mlbam))

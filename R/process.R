@@ -18,9 +18,9 @@ process_statcast = function(data, player_ids) {
   # remove bad statcast years (2015-2016)
   # currently exclude 2021 until maybe the all star break
   # or completely hold back for validation
-  data = data %>%
-    dplyr::filter(lubridate::year(game_date) >= 2021) %>%
-    dplyr::filter(lubridate::year(game_date) <= 2024)
+  # data = data %>%
+  #   dplyr::filter(lubridate::year(game_date) >= 2021) %>%
+  #   dplyr::filter(lubridate::year(game_date) <= 2024)
 
   # View(head(data))
   for (name in names(data)) {
@@ -46,15 +46,15 @@ process_statcast = function(data, player_ids) {
 
   # View(head(data))
 
-  # temporarily extract/remove game data
-  game_date = data$game_date
-  data = data[, -1]
+  # # temporarily extract/remove game data
+  # game_date = data$game_date
+  # data = data[, -1]
 
-  # replace "null" with NA
-  data[data == "null"] = NA
+  # # replace "null" with NA
+  # data[data == "null"] = NA
 
-  # recombine data
-  data = dplyr::bind_cols(data.frame(game_date = game_date), data)
+  # # recombine data
+  # data = dplyr::bind_cols(data.frame(game_date = game_date), data)
 
   # variables that are 100% NA
   na_vars = c(
@@ -128,11 +128,18 @@ get_bip = function(statcast_pitches) {
   ## need to collapse some pitch types i think
   ## comment each line so we really know what they do
   statcast_pitches %>%
+    dplyr::filter(!is.na(.data$release_pos_x)) %>%
+    dplyr::filter(!is.na(.data$release_pos_y)) %>%
+    dplyr::filter(!is.na(.data$release_pos_z)) %>%
     dplyr::filter(!is.na(.data$hc_x)) %>%
     dplyr::filter(!is.na(.data$hc_y)) %>%
+    dplyr::filter(!is.na(.data$pitch_type)) %>%
     dplyr::filter(!is.na(.data$launch_angle)) %>%
     dplyr::filter(!is.na(.data$launch_speed)) %>%
     dplyr::filter(!is.na(.data$pitch_type)) %>%
+    dplyr::filter(!is.na(.data$release_speed)) %>%
+    dplyr::filter(!is.na(.data$pfx_x)) %>%
+    dplyr::filter(!is.na(.data$pfx_z)) %>%
     dplyr::filter(.data$pitch_type != "") %>%
     dplyr::filter(.data$pitch_type != "KN") %>%
     dplyr::filter(.data$pitch_type != "EP") %>%

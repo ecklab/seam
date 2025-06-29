@@ -128,7 +128,7 @@ do_full_seam_matchup = function(.batter, .pitcher, .bip, .batter_pool, .pitcher_
 
   }
 
-  # synth pitcher ##############################################################
+  # synth pitcher ##############################################################     FIXME: problemm with synthetic PITCHER only... i think
 
   synth_pitcher_df = empirical_batter_df
   n_p = nrow(empirical_batter_pool)
@@ -157,7 +157,7 @@ do_full_seam_matchup = function(.batter, .pitcher, .bip, .batter_pool, .pitcher_
     #   pitcher_pitches$freq_pitches %>%
     #   as.vector()
 
-    synth_pitcher_pools = purrr::map2(synth_pitcher_pools,
+    synth_pitcher_pools = purrr::map2(synth_pitcher_pools,   # TODO: fix pitcher pools and batter pools have something wrong?
                                       pitcher_pitches$freq_pitches,
                                       re_weight)
 
