@@ -44,7 +44,7 @@ calc_sim_pitcher = function(p_study_char, p_pool_char, ratio = 0.85) {
   char = c("release_speed", "release_spin_rate", "pfx_x", "pfx_z",
            "release_pos_x", "release_pos_y", "release_pos_z")
   stuff = which(char %in% c("release_speed", "release_spin_rate", "pfx_x", "pfx_z"))
-  not_stuff = which(char %in% c("release_pos_x", "release_pos_y", "release_pos_z"))
+  not_stuff = which(char %in% c("release_pos_x", "release_pos_y", "release_pos_z"))    # TODO: check NA values in these
 
   char_study = p_study_char %>%
     dplyr::select(dplyr::all_of(char)) %>%

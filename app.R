@@ -6,6 +6,7 @@ bip = readRDS("data/bip.Rds")
 b_lu = data.frame(readRDS("data/b-lu.Rds")) # why is this so much faster as a data frame
 p_lu = data.frame(readRDS("data/p-lu.Rds")) # why is this so much faster as a data frame
 batter_pool = readRDS("data/batter-pool.Rds")
+print(unique(batter_pool$game_year))
 pitcher_pool = readRDS("data/pitcher-pool.Rds")
 mlb_teams = readRDS("data/mlb-teams.Rds")
 stadiums = readRDS("data/stadiums.Rds")

@@ -10,6 +10,7 @@ if (!require(GeomMLBStadiums)) {
 
 # load packages necessary for setup
 library("dplyr")
+devtools::install_github(repo = "saberpowers/sabRmetrics")
 
 # load R functions, some necessary for setup
 devtools::load_all()
@@ -26,7 +27,7 @@ if (!dir.exists("data")) {
 
 # download full data from statcast if it does not exist locally
 if (!file.exists("data-raw/statcast-all-pitches.csv")) {
-  pitches = dl_statcast(start_year = 2017, end_year = 2021)
+  pitches = dl_statcast(start_year = 2021, end_year = 2024)    # TODO: this is where we edit year
   data.table::fwrite(pitches, "data-raw/statcast-all-pitches.csv")
 }
 
@@ -101,3 +102,6 @@ if (all(sapply(required_files, file.exists))) {
 
 # run tests
 shiny::runTests()
+
+
+# FIXME: says setup.R works... but app.R does not?!?!

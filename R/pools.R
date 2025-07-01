@@ -3,7 +3,7 @@ scale_this = function(x) {
 }
 
 # this should happen before the seam app
-get_batter_pool = function(bip, year_start = 2017, year_end = 2021) {
+get_batter_pool = function(bip, year_start = 2021, year_end = 2024) {
 
   bip = bip %>%
     dplyr::filter(.data$game_year >= year_start) %>%
@@ -87,7 +87,7 @@ make_bip_pool_synth_batter = function(.pitch_type, .batter, .pitcher, .bip, .bat
 }
 
 # this should happen before the seam app
-get_pitcher_pool = function(bip, year_start = 2017, year_end = 2021) {
+get_pitcher_pool = function(bip, year_start = 2021, year_end = 2024) {
 
   bip = bip %>%
     dplyr::filter(.data$game_year >= year_start) %>%
