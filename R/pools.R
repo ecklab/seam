@@ -6,12 +6,12 @@ scale_this = function(x) {
 get_batter_pool = function(bip, year_start = 2021, year_end = 2024) {
 
   bip = bip %>%
-    dplyr::filter(.data$game_year >= year_start) %>%
-    dplyr::filter(.data$game_year <= year_end)
+    dplyr::filter("game_year" >= year_start) %>%
+    dplyr::filter("game_year" <= year_end)
 
   # batter pool by "year"
   batter_pool_year = bip %>%
-    dplyr::group_by(.data$batter, .data$pitch_type, .data$game_year, .data$stand) %>%
+    dplyr::group_by(.data$batter, .data$pitch_type, "game_year", .data$stand) %>%
     dplyr::summarise(lf_prc = mean(.data$spray_angle < -15),
                      cf_prc = mean(.data$spray_angle >= -15 & .data$spray_angle <= 15),
                      rf_prc = mean(.data$spray_angle > 15),
@@ -55,7 +55,7 @@ make_bip_pool_synth_batter = function(.pitch_type, .batter, .pitcher, .bip, .bat
     dplyr::filter(.data$p_throws == .p_throws) %>%
     dplyr::filter(.data$stand == .stand) %>%
     dplyr::filter(.data$pitch_type == .pitch_type) %>%
-    dplyr::select(.data$game_year, .data$batter, .data$x, .data$y)
+    dplyr::select("game_year", "batter", "x", "y")
 
   # characteristics of batter under study
   ## TODO: consider overall vs current year
@@ -70,7 +70,7 @@ make_bip_pool_synth_batter = function(.pitch_type, .batter, .pitcher, .bip, .bat
     dplyr::filter(.data$batter %in% unique(p_bip$batter)) %>% # THIS MIGHT BE "CORRECT" BUT EFFECT OTHER CALCULATIONS!!!!
     dplyr::filter(.data$pitch_type == .pitch_type) %>%
     dplyr::filter(.data$stand == .stand) %>%
-    dplyr::filter(.data$game_year != 0)
+    dplyr::filter(.data$game_year != 0)    # FIXME: this is where we need to investigate more...
 
   # calculate similarity and weights for all potential donors
   b_pool_sims = calc_sim_batter(b_study_char = b_study_char,
@@ -82,7 +82,7 @@ make_bip_pool_synth_batter = function(.pitch_type, .batter, .pitcher, .bip, .bat
 
   # append sims and weights to bip, select relevant variables
   dplyr::left_join(p_bip, b_pool, by = c("batter", "game_year")) %>%
-    dplyr::select(.data$x, .data$y, .data$similarity, .data$weight)
+    dplyr::select("x", "y", "similarity", "weight")
 
 }
 
@@ -145,7 +145,7 @@ make_bip_pool_synth_pitcher = function(.pitch_type, .batter, .pitcher, .bip, .pi
     dplyr::filter(.data$p_throws == .p_throws) %>%
     dplyr::filter(.data$stand == .stand) %>%
     dplyr::filter(.data$pitch_type == .pitch_type) %>%
-    dplyr::select(.data$game_year, .data$pitcher, .data$x, .data$y)
+    dplyr::select("game_year", "pitcher", "x", "y")
 
   # characteristics of batter under study
   ## TODO: consider overall vs current year
@@ -172,7 +172,7 @@ make_bip_pool_synth_pitcher = function(.pitch_type, .batter, .pitcher, .bip, .pi
 
   # append sims and weights to bip, select relevant variables
   dplyr::left_join(b_bip, p_pool, by = c("pitcher", "game_year")) %>%
-    dplyr::select(.data$x, .data$y, .data$similarity, .data$weight)
+    dplyr::select("x", "y", "similarity", "weight")
 
 }
 

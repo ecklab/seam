@@ -25,8 +25,6 @@ mlbam_xy_transformation = function (data, x = "hc_x", y = "hc_y", column_suffix 
 
 plot_df = function(df, stadium = "generic", main = "") {
 
-  print(head(df))
-
   if (sum(df$z) == 0 || all(is.na(df$z))) {    # FIXME: something wrong
     p = ggplot2::ggplot(df, ggplot2::aes(x = x, y = y, z = z)) +
       ggplot2::xlim(-150, 150) +
