@@ -23,11 +23,11 @@ process_statcast = function(data, player_ids) {
   #   dplyr::filter(lubridate::year(game_date) <= 2024)
 
   # View(head(data))
-  for (name in names(data)) {
-    if (startsWith(name, "pitch")) {
-      print(name)
-    }    # FIXME: need to comment out and delete this later
-  }
+  # for (name in names(data)) {
+  #   if (startsWith(name, "pitch")) {
+  #     print(name)
+  #   }    # FIXME: need to comment out and delete this later
+  # }
   # View(head(player_ids))
 
   # add more informative name information
