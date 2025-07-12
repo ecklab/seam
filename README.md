@@ -1,9 +1,5 @@
 # seam
 
-<!-- badges: start -->
-[![run-tets](https://github.com/ecklab/seam/workflows/run-tests/badge.svg)](https://github.com/ecklab/seam/actions)
-<!-- badges: end -->
-
 The goal of the {seam} application is to implement SEAM methodology as an interactive application in `R`.
 
 ## App
