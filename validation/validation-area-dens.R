@@ -8,23 +8,37 @@ b_lu = as.data.frame(readRDS("data/b-lu.Rds")) # why does this break as a tibble
 p_lu = as.data.frame(readRDS("data/p-lu.Rds")) # why does this break as a tibble....??
 
 # modify pools for validation
-batter_pool  = get_batter_pool(bip = bip, year_start = 2017, year_end = 2020)
-pitcher_pool = get_pitcher_pool(bip = bip, year_start = 2017, year_end = 2020)
+batter_pool  = get_batter_pool(bip = bip, year_start = 2021, year_end = 2024)
+pitcher_pool = get_pitcher_pool(bip = bip, year_start = 2021, year_end = 2024)
 
 trn = bip %>%
-  filter(game_year <= 2020)
+  filter(game_year <= 2023)
+
+trn_p = trn %>%
+  group_by(pitcher) %>%
+  summarize(n = n()) %>%
+  pull(pitcher)
+  
+trn_b = bip %>%
+  group_by(batter) %>%
+  summarize(n = n()) %>%
+  pull(batter)
 
 matchups = bip %>%
-  filter(game_year == 2021) %>%
+  filter(game_year == 2024) %>%
   group_by(batter, pitcher) %>%
   summarise(n = n()) %>%
   filter(n >= 10) %>%
   select(-n) %>%
-  filter(batter != 628451) %>% # only 2021 bip (cannot fit to trn)
-  filter(batter != 677551) %>% # only 2021 bip (cannot fit to trn)
-  filter(pitcher != 657093)    # only 2021 bip (cannot fit to trn)
+  filter(batter != 672761) %>%
+  filter(batter != 681624) %>%
+  filter(batter != 690993) %>%
+  filter(batter != 694192) %>%
+  filter(batter != 807799)
 
 get_dens = function(n) {
+
+  print(n)    # FIXME: fails on first call to function.
 
   results = matrix(data = 0, nrow = nrow(matchups), ncol = 3)
 
@@ -41,7 +55,7 @@ get_dens = function(n) {
     )
 
     results[i, ] = c(
-      calc_area_dens(n = n, synthetic = est$seam_df),
+      calc_area_dens(n = n, synthetic = est$seam_df),    # FIXME: error not based indexing
       calc_area_dens(n = n, synthetic = est$empirical_pitcher_df),
       calc_area_dens(n = n, synthetic = est$empirical_batter_df)
     )

@@ -1,6 +1,6 @@
 # load packages and seam functions
 library(tidyverse)
-devtools::load_all()
+devtools::load_all()    # TODO: NOTHING! FULLY RUNS!
 
 # load data
 bip = readRDS("data/bip.Rds")
@@ -8,21 +8,34 @@ b_lu = as.data.frame(readRDS("data/b-lu.Rds")) # why does this break as a tibble
 p_lu = as.data.frame(readRDS("data/p-lu.Rds")) # why does this break as a tibble....??
 
 # modify pools for validation
-batter_pool  = get_batter_pool(bip = bip, year_start = 2017, year_end = 2020)
-pitcher_pool = get_pitcher_pool(bip = bip, year_start = 2017, year_end = 2020)
+batter_pool  = get_batter_pool(bip = bip, year_start = 2021, year_end = 2024)
+pitcher_pool = get_pitcher_pool(bip = bip, year_start = 2021, year_end = 2024)
 
 trn = bip %>%
-  filter(game_year <= 2020)
+  filter(game_year <= 2023)
 
-matchups = bip %>%
-  filter(game_year == 2021) %>%
-  group_by(batter, pitcher) %>%
-  summarise(n = n()) %>%
-  filter(n >= 10) %>%
-  select(-n) %>%
-  filter(batter != 628451) %>% # only 2021 bip (cannot fit to trn)
-  filter(batter != 677551) %>% # only 2021 bip (cannot fit to trn)
-  filter(pitcher != 657093)    # only 2021 bip (cannot fit to trn)
+trn_p = trn %>%
+    group_by(pitcher) %>%
+    summarize(n = n()) %>%
+    pull(pitcher)
+  
+  trn_b = bip %>%
+    group_by(batter) %>%
+    summarize(n = n()) %>%
+    pull(batter)
+
+matchups = bip %>%    # directory of 2024 matchups
+    filter(game_year == 2024) %>%
+    group_by(batter, pitcher) %>%
+    summarise(n = n()) %>%
+    filter(n >= 8) %>%
+    select(-n) %>%
+    filter(batter %in% trn_b, pitcher %in% trn_p) %>%
+    filter(batter != 672761) %>%
+    filter(batter != 681624) %>%
+    filter(batter != 690993) %>%
+    filter(batter != 694192) %>%
+    filter(batter != 807799)
 
 get_area = function(alpha) {
 

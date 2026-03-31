@@ -1,5 +1,6 @@
 # load packages and seam functions
 devtools::load_all()
+library(tidyverse)
 
 # load data
 bip = readRDS("data/bip.Rds")
@@ -7,21 +8,34 @@ b_lu = readRDS("data/b-lu.Rds")
 p_lu = readRDS("data/p-lu.Rds")
 
 # modify pools for validation
-batter_pool  = get_batter_pool(bip = bip, year_start = 2017, year_end = 2020)
-pitcher_pool = get_pitcher_pool(bip = bip, year_start = 2017, year_end = 2020)
+batter_pool  = get_batter_pool(bip = bip, year_start = 2021, year_end = 2024)
+pitcher_pool = get_pitcher_pool(bip = bip, year_start = 2021, year_end = 2024)
 
-trn = bip |>
-  dplyr::filter(game_year <= 2020)
+trn = bip %>%
+  filter(game_year <= 2023)
 
-matchups = bip |>
-  dplyr::filter(game_year == 2021) |>
-  dplyr::group_by(batter, pitcher) |>
-  dplyr::summarise(n = dplyr::n(), .groups = "drop") |>
-  dplyr::filter(n >= 10) |>
-  dplyr::select(-n) |>
-  dplyr::filter(batter != 628451) |> # only 2021 bip (cannot fit to trn)
-  dplyr::filter(batter != 677551) |> # only 2021 bip (cannot fit to trn)
-  dplyr::filter(pitcher != 657093)   # only 2021 bip (cannot fit to trn)
+trn_p = bip %>%
+  group_by(pitcher) %>%
+  summarise(n = n()) %>%
+  pull(pitcher)
+
+trn_b = bip %>%
+  group_by(batter) %>%
+  summarise(n = n()) %>%
+  pull(batter)
+
+matchups = bip %>%
+  filter(game_year == 2024) %>%
+  group_by(batter, pitcher) %>%
+  summarise(n = dplyr::n(), .groups = "drop") %>%
+  filter(n >= 10) %>%
+  select(-n) %>%
+  filter(batter %in% trn_b, pitcher %in% trn_p) %>%
+  filter(batter != 672761) %>%
+  filter(batter != 681624) %>%
+  filter(batter != 690993) %>%
+  filter(batter != 694192) %>%    # FIXME: still something wrong with subscript out of bounds.
+  filter(batter != 807799)
 
 method_list = c("seam", "batter", "pitcher", "seam_mod", "both")
 
@@ -47,7 +61,7 @@ get_top_n_coverage = function(n, d = 2) {
 
     # create test set for matchup
     tst = bip
-    tst = tst[tst$game_year == 2021, ]
+    tst = tst[tst$game_year == 2024, ]
     tst = tst[tst$batter == matchups[i,]$batter, ]
     tst = tst[tst$pitcher == matchups[i,]$pitcher, ]
 
@@ -74,7 +88,7 @@ get_top_n_coverage = function(n, d = 2) {
 
 # results for "all n"
 graph_points = seq(from = 1500, to = 2500, by = 50)
-results_many_n = parallel::mclapply(graph_points, get_top_n_coverage, mc.cores = 8)
+results_many_n = parallel::mclapply(graph_points, get_top_n_coverage, mc.cores = 8)    # FIXME: warning here, but code still runs.
 
 # save results for many n as a list
 saveRDS(results_many_n, file = "validation/conditional-top-n-cov-n.Rds")

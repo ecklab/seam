@@ -1,0 +1,12 @@
+name: seam-beta
+title: seam-beta
+username: rohannakra
+account: rohannakra
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 16697140
+bundleId: 11766816
+url: https://rohannakra.shinyapps.io/seam-beta/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

@@ -1,101 +1,100 @@
 library(tidyverse)
-devtools::load_all()
+devtools::load_all()    # TODO: NOTHING! FULLY RUNS!
 
 bip = readRDS("data/bip.Rds")
 b_lu = as.data.frame(readRDS("data/b-lu.Rds")) # why does this break as a tibble....??
 p_lu = as.data.frame(readRDS("data/p-lu.Rds")) # why does this break as a tibble....??
 
 # modify pools for validation
-batter_pool = get_batter_pool(bip = bip, year_start = 2017, year_end = 2020)
-pitcher_pool = get_pitcher_pool(bip = bip, year_start = 2017, year_end = 2020)
+batter_pool = get_batter_pool(bip = bip, year_start = 2021, year_end = 2023)
+pitcher_pool = get_pitcher_pool(bip = bip, year_start = 2021, year_end = 2023)
 
 trn = bip %>%
-  filter(game_year <= 2020)
+  filter(game_year <= 2023)
 
 trn_b = trn %>%
   group_by(batter) %>%
   summarize(n = n()) %>%
-  filter(n > 25) %>%
+  filter(n > 25) %>%    # batters with over 25 bip from 2021 to 2023
   pull(batter)
 
 trn_p = trn %>%
   group_by(pitcher) %>%
   summarize(n = n()) %>%
-  filter(n > 25) %>%
+  filter(n > 25) %>%    # pitchers with over 25 bip from 2021 to 2023
   pull(pitcher)
 
 tst = bip %>%
-  filter(game_year > 2020) %>%
-  filter(batter %in% trn_b) %>%
+  filter(game_year == 2024) %>%
+  filter(batter %in% trn_b) %>%    # NOTE: I think this is the key... solves null value problem
   filter(pitcher %in% trn_p)
 
-validate_all = function(alpha = c(0.10, 0.25, 0.50, 0.75, 0.90)) {
+# validate_all = function(alpha = c(0.10, 0.25, 0.50, 0.75, 0.90)) {    # NOTE: this is the non-parallel function
 
-  in_hdr = array(NA, c(nrow(tst), 3, length(alpha)))
+#   in_hdr = array(NA, c(nrow(tst), 3, length(alpha)))
 
-  for (i in 1:nrow(tst)) {
+#   for (i in 1:10000) {    # TODO: need to check how big tst is... limit to 10K... there is 96000 tst samples
 
-    batter = tst[i, ]$batter
-    pitcher = tst[i, ]$pitcher
+#     batter = tst[i, ]$batter
+#     pitcher = tst[i, ]$pitcher
 
-    # output matchups to find which causes warnings / error
-    print(c(batter = batter, pitcher = pitcher))
+#     # output matchups to find which causes warnings / error
+#     # print(c(batter = batter, pitcher = pitcher)) NOTE: for testing purposes
 
-    try({
-      seam = do_full_seam_matchup(
-        .batter = batter,
-        .pitcher = pitcher,
-        .bip = trn,
-        .batter_pool = batter_pool,
-        .pitcher_pool = pitcher_pool,
-        .ratio_batter = .85,
-        .ratio_pitcher = .85
-      )
+#     try({
+#       seam = do_full_seam_matchup(    # NOTE: chek full documentation on this
+#         .batter = batter,
+#         .pitcher = pitcher,
+#         .bip = trn,
+#         .batter_pool = batter_pool,
+#         .pitcher_pool = pitcher_pool,
+#         .ratio_batter = .85,
+#         .ratio_pitcher = .85
+#       )
 
-      in_hdr[i, , ] = rbind(
-        check_in_hdrs(
-          alpha = alpha,
-          pitch = tst[i, c("x", "y")],
-          synthetic = seam$seam_df,
-          plot = FALSE
-        ),
-        check_in_hdrs(
-          alpha = alpha,
-          pitch = tst[i, c("x", "y")],
-          synthetic = seam$empirical_pitcher_df,
-          plot = FALSE
-        ),
-        check_in_hdrs(
-          alpha = alpha,
-          pitch = tst[i, c("x", "y")],
-          synthetic = seam$empirical_batter_df,
-          plot = FALSE
-        )
-      )
-    })
+#       in_hdr[i, , ] = rbind(
+#         check_in_hdrs(
+#           alpha = alpha,
+#           pitch = tst[i, c("x", "y")],
+#           synthetic = seam$seam_df,
+#           plot = FALSE
+#         ),
+#         check_in_hdrs(
+#           alpha = alpha,
+#           pitch = tst[i, c("x", "y")],
+#           synthetic = seam$empirical_pitcher_df,
+#           plot = FALSE
+#         ),
+#         check_in_hdrs(
+#           alpha = alpha,
+#           pitch = tst[i, c("x", "y")],
+#           synthetic = seam$empirical_batter_df,
+#           plot = FALSE
+#         )
+#       )
+#     })
 
-    if (i %% 5 == 0) {
-      print(i)
-      mat = rbind(
-        colMeans(in_hdr[, , 1], na.rm = TRUE),
-        colMeans(in_hdr[, , 2], na.rm = TRUE),
-        colMeans(in_hdr[, , 3], na.rm = TRUE),
-        colMeans(in_hdr[, , 4], na.rm = TRUE),
-        colMeans(in_hdr[, , 5], na.rm = TRUE)
-      )
-      rownames(mat) = alpha
-      colnames(mat) = c("seam", "batter", "pitcher")
-      print(mat)
-    }
+#     if (i %% 5 == 0) {
+#       print(i)
+#       mat = rbind(
+#         colMeans(in_hdr[, , 1], na.rm = TRUE),
+#         colMeans(in_hdr[, , 2], na.rm = TRUE),
+#         colMeans(in_hdr[, , 3], na.rm = TRUE),
+#         colMeans(in_hdr[, , 4], na.rm = TRUE),
+#         colMeans(in_hdr[, , 5], na.rm = TRUE)
+#       )
+#       rownames(mat) = alpha
+#       colnames(mat) = c("seam", "batter", "pitcher")
+#       print(mat)
+#     }
 
-  }
+#   }
 
-  in_hdr
+#   in_hdr
 
-}
-
-results = validate_all()
-results
+# }
+# results = validate_all()
+# results
 
 # testing parallel validation
 library(foreach)
@@ -105,14 +104,14 @@ doParallel::registerDoParallel(cl)
 alpha = alpha = c(0.10, 0.25, 0.50, 0.75, 0.90)
 tst = tst[, c("batter", "pitcher", "x", "y")]
 
-results = foreach(i = 1:nrow(tst)) %dopar% {
-
+results = foreach(i = 1:10000) %dopar% {    # TODO: before '10000' this was 'nrow(tst)', need to evaluate validation methods before full data
+  print(i)
   batter = tst[i,]$batter
   pitcher = tst[i,]$pitcher
 
   in_hdr = matrix(NA, nrow = 3, ncol = length(alpha))
 
-  try({
+  try({    # TODO: try this without 'try' statement
     seam = do_full_seam_matchup(
       .batter = batter,
       .pitcher = pitcher,
@@ -149,9 +148,9 @@ results = foreach(i = 1:nrow(tst)) %dopar% {
   in_hdr
 
 }
-
+# TODO: comment out 10K thing see how parallel works.
 # stop cluster
 parallel::stopCluster(cl)
 
 # store intermediate results
-saveRDS(results, file = "validation/marginal-coverage.Rds")
+saveRDS(results, file = "validation/marginal-coverage.Rds")    # TODO: need to check this.
